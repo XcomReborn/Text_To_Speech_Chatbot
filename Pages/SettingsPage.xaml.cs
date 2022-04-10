@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using TTSBot;
+
 namespace WpfApp1.Pages
 {
     /// <summary>
@@ -23,6 +25,15 @@ namespace WpfApp1.Pages
         public SettingsPage()
         {
             InitializeComponent();
+
+            TextToSpeech tts = (TextToSpeech)Application.Current.Properties["tts"];
+            TwitchTTSBotSettingsManager botSettingsManager = tts.bot.botSettingManager;
+
+
+            botTwitchUserName.Text = botSettingsManager.settings.botName;
+            botTwitchOAuthKey.Password = botSettingsManager.settings.botOAuthKey;
+            channelName.Text = botSettingsManager.settings.defaultJoinChannel;
+            adminUserName.Text = botSettingsManager.settings.botAdminUserName;
 
         }
     }
