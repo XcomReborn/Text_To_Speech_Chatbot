@@ -281,6 +281,32 @@ namespace TTSBot{
                 }                   
                 }
 
+                // VIP commands 
+                if ((e.ChatMessage.IsVip) || (e.ChatMessage.IsModerator) || (e.ChatMessage.IsBroadcaster) || (bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
+                {
+                    foreach (var item in commmandDict)
+                    {
+                        if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.VIP))
+                        {
+                            item.Key.DynamicInvoke(e);
+                        }
+
+                    }
+                }
+
+                // USER commands 
+                if ( (true) || (e.ChatMessage.IsVip) || (e.ChatMessage.IsModerator) || (e.ChatMessage.IsBroadcaster) || (bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
+                {
+                    foreach (var item in commmandDict)
+                    {
+                        if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.USER))
+                        {
+                            item.Key.DynamicInvoke(e);
+                        }
+
+                    }
+                }
+
             }
 
         }
