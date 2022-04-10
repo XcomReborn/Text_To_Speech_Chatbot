@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Windows.Input;
 
 [System.Serializable]
 
@@ -108,6 +109,15 @@ class TwitchTTSBotSettings
     public string botOAuthKey = "oauth:6lwp9xs2oye948hx2hpv5hilldl68g"; // the key you want to use for connection to the twitch server
     public string defaultJoinChannel = "xcomreborn"; // typically the broadcasters twitch channel
     public string botAdminUserName = "xcomreborn"; // incase you want to use the bot on someone elses channel only you will hear the tts.
+    // Stores whose text messages the bot will speak.
+    public bool broadcasterSpeaks = true;
+    public bool modSpeaks = true;
+    public bool vipSpeaks = true;
+    public bool userSpeaks = true;
+    //Keys for speech message stack manipulation
+    public Key pauseKey = Key.Multiply;
+    public Key skipKey = Key.OemPlus;
+    public Key skipAllKey = Key.OemBackslash;
 
     public override string ToString()
     {

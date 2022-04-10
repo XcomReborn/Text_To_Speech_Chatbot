@@ -10,10 +10,47 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="120*"/>
+            <ColumnDefinition Width="120*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
+            <RowDefinition Height="9*"/>
         </Grid.RowDefinitions>
+
+        <Grid Grid.Column="1" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBox x:Name="botTwitchUserName" HorizontalAlignment="Left" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="120"/>
+                <TextBlock Margin="20 0 0 0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="Red" Text="Bot Twitch User Name"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <TextBox x:Name="botTwitchOAuthKey" HorizontalAlignment="Left" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="120"/>
+                <TextBlock Margin="20 0 0 0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="Red" Text="Bot Twitch OAuth Key"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <TextBox x:Name="channelName" HorizontalAlignment="Left" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="120"/>
+                <TextBlock Margin="20 0 0 0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="Red" Text="Channel Name"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal">
+                <TextBox x:Name="adminUserName" HorizontalAlignment="Left" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="120"/>
+                <TextBlock Margin="20 0 0 0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="Red" Text="Admin User Name"/>
+            </StackPanel>
+
+        </Grid>
+        <TextBlock Grid.Column="1" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Connection Settings" FontSize="25" VerticalAlignment="Center" Foreground="Red" IsEnabled="False"/>
+
+
+
     </Grid>
 </Page>
