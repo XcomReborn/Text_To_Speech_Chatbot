@@ -367,15 +367,18 @@ namespace TTSBot{
             if (wordList.Length > 2){
                 // typical input in the form of !substitute <3 wub
                 string word = wordList[1];
-                System.Console.WriteLine(String.Format("word : {0}", word));
-                string wordToSubstitute = String.Join(" ", wordList.Skip(2));
+                if ((word.Length > 0)||(word != "")||(word != " "))
+                {
+                    System.Console.WriteLine(String.Format("word : {0}", word));
+                    string wordToSubstitute = String.Join(" ", wordList.Skip(2));
 
-                substitutionWords.AddWordPair(word, wordToSubstitute);
-                substitutionWords.Save();
+                    substitutionWords.AddWordPair(word, wordToSubstitute);
+                    substitutionWords.Save();
 
-                bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} will be substituted with {1} in text to speech.", word, wordToSubstitute));
+                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} will be substituted with {1} in text to speech.", word, wordToSubstitute));
 
-                return true;
+                    return true;
+                }
 
             }
 

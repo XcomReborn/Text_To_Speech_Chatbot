@@ -48,9 +48,14 @@ namespace WpfApp1.Pages
                 RowDefinition descriptionRow = new RowDefinition();
                 descriptionColumn.RowDefinitions.Add(descriptionRow);
 
+                RowDefinition privilegeRow = new RowDefinition();
+                privilegeColumn.RowDefinitions.Add(privilegeRow);
+
                 RowDefinition enabledRow = new RowDefinition();
                 enabledColumn.RowDefinitions.Add(enabledRow);
 
+
+                // Commands
                 MyTextBox myTextBox = new MyTextBox();
                 myTextBox.Text = item.Value.ttsComparisonCommand;
                 myTextBox.name = item.Value.name;
@@ -62,7 +67,7 @@ namespace WpfApp1.Pages
                 commandColumn.Children.Add(commandGrid);
                 commandGrid.Children.Add(myTextBox);
 
-
+                // Usage
                 MyLabel usageLabel = new MyLabel();
                 usageLabel.Content = String.Format(item.Value.usage, item.Value.ttsComparisonCommand);
                 usageLabel.name = item.Value.name;
@@ -75,7 +80,7 @@ namespace WpfApp1.Pages
                 usageColumn.Children.Add(usageGrid);
                 usageGrid.Children.Add(usageLabel);
 
-
+                // Descriptions
                 Label descriptionLabel = new Label();
                 descriptionLabel.Content = item.Value.description;
                 descriptionLabel.Foreground = Brushes.Blue;
@@ -86,13 +91,43 @@ namespace WpfApp1.Pages
                 descriptionColumn.Children.Add(descriptionGrid);
                 descriptionGrid.Children.Add(descriptionLabel);
 
+
+                // Privileges
+                MyComboBox comboBox = new MyComboBox();
+
+                TextBlock myTextBlock = new TextBlock();
+                myTextBlock.Foreground = Brushes.Blue;
+                myTextBlock.Text = "User";
+                comboBox.Items.Add(myTextBlock);
+                TextBlock myTextBlock2 = new TextBlock();
+                myTextBlock2.Foreground = Brushes.Blue;
+                myTextBlock2.Text = "VIP";
+                comboBox.Items.Add(myTextBlock2);
+                TextBlock myTextBlock3 = new TextBlock();
+                myTextBlock3.Foreground = Brushes.Blue;
+                myTextBlock3.Text = "Mod";
+                comboBox.Items.Add(myTextBlock3);
+                TextBlock myTextBlock4 = new TextBlock();
+                myTextBlock4.Foreground = Brushes.Blue;
+                myTextBlock4.Text = "Streamer";
+                comboBox.Items.Add(myTextBlock4);
+
+                Grid privilegeGrid = new Grid();
+                Grid.SetRow(privilegeGrid, i);
+                privilegeColumn.Children.Add(privilegeGrid);
+                privilegeGrid.Children.Add(comboBox);
+
+                comboBox.name = item.Value.name;
+                comboBox.SelectedIndex = (int)item.Value.privilageLevel;
+                comboBox.SelectionChanged += new SelectionChangedEventHandler(PrivilegeLevelChanged);
+
+                // CheckBoxes
                 MyCheckBox myCheckBox = new MyCheckBox();
-                //myCheckBox.Content = "Enabled";
                 myCheckBox.IsChecked = item.Value.enabled;
                 myCheckBox.name = item.Value.name;
                 myCheckBox.Checked += new RoutedEventHandler(CheckBoxToggled);
                 myCheckBox.Unchecked += new RoutedEventHandler(CheckBoxToggled);
-                myCheckBox.HorizontalAlignment = HorizontalAlignment.Right;    
+                myCheckBox.HorizontalAlignment = HorizontalAlignment.Center;    
 
                 Grid enabledGrid = new Grid();
                 Grid.SetRow(enabledGrid, i);
@@ -106,6 +141,27 @@ namespace WpfApp1.Pages
             
         }
 
+        private void PrivilegeLevelChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try {
+                TTSBotCommands commands = (TTSBotCommands)Application.Current.Properties["commands"];
+                foreach (var item in commands.commands)
+                {
+                    if (((MyComboBox)sender).name == item.Value.name)
+                    {
+                        item.Value.privilageLevel = (Commands.UserLevel)((MyComboBox)sender).SelectedIndex;
+                        commands.Save();
+                        ((TextToSpeech)Application.Current.Properties["tts"]).commands.Load();
+
+                    }
+                }
+
+            } catch
+            {
+
+            }
+
+        }
 
         private void CheckBoxToggled(object sender, RoutedEventArgs e)
         {

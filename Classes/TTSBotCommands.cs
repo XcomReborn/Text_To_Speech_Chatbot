@@ -34,10 +34,10 @@ class TTSBotCommands{
             { tts.DisplayAvailableVoices, new Commands("!voices",Commands.UserLevel.MOD, "!voices", true , "{0}","Displays the available voices and the number indicies.") },  
             { tts.SetVoice, new Commands("!voice",Commands.UserLevel.MOD, "!voice", true , "{0} #","Chooses an available voice using the number index.") },
             { tts.SetUserVoice, new Commands("!uservoice",Commands.UserLevel.MOD, "!uservoice", true , "{0} [userName] #","Chooses an available voice for a specified user using the number index.") }, 
-            { tts.SetSubstituteWord, new Commands("!substitute",Commands.UserLevel.MOD, "!substitute", true , "{0} [word] [substitute words]","Substitutes a word for another word or phrase.") },    
-            { tts.RemoveSubstitute, new Commands("!removesubstitute",Commands.UserLevel.MOD, "!removesubstitute", true , "{0} [word]","Removes a word that was previously being substituted.") },
-            { tts.SetRegex, new Commands("!regex",Commands.UserLevel.MOD, "!regex", true , "{0} [regex] [substitute words]","Substitutes a regular expression for another word or phrase.") }, 
-            { tts.RemoveRegex, new Commands("!removeregex",Commands.UserLevel.MOD, "!removeregex", true , "{0} [regex]","Removes a regular expression that was previously being substituted.") },
+            { tts.SetSubstituteWord, new Commands("!substitute",Commands.UserLevel.STREAMER, "!substitute", true , "{0} [word] [substitute words]","Substitutes a word for another word or phrase.") },    
+            { tts.RemoveSubstitute, new Commands("!removesubstitute",Commands.UserLevel.STREAMER, "!removesubstitute", true , "{0} [word]","Removes a word that was previously being substituted.") },
+            { tts.SetRegex, new Commands("!regex",Commands.UserLevel.STREAMER, "!regex", true , "{0} [regex] [substitute words]","Substitutes a regular expression for another word or phrase.") }, 
+            { tts.RemoveRegex, new Commands("!removeregex",Commands.UserLevel.STREAMER, "!removeregex", true , "{0} [regex]","Removes a regular expression that was previously being substituted.") },
 
         };
 
@@ -206,7 +206,7 @@ class TTSBotCommands{
 [System.Serializable]
 class Commands{
 
-    public enum UserLevel { USER, VIP,MOD, STREAMER};
+    public enum UserLevel { USER, VIP, MOD, STREAMER};
 
     public readonly string name;
 

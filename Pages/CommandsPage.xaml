@@ -23,19 +23,22 @@
             <ColumnDefinition Width="25*"/>
             <ColumnDefinition Width="32*"/>
             <ColumnDefinition Width="32*"/>
-            <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="20*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="1" Text="Command" HorizontalAlignment="Left" Foreground="Red" Margin="10,0,10,0" FontFamily="Arial Black" FontSize="20" FontStyle="Normal"/>
         <TextBlock Grid.Row="0" Grid.Column="2" Text="Usage" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="20" ></TextBlock>
-        <TextBlock Grid.Row="0" Grid.Column="3" Text="Description" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="20" ></TextBlock>
-        <TextBlock Grid.Row="0" Grid.Column="4" Text="Enabled" HorizontalAlignment="Center" FontSize="20" FontFamily="Arial Black" />
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="Description" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="20" ></TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="4" Text="Privilege" HorizontalAlignment="Center" FontSize="20" FontFamily="Arial Black" />
+         <TextBlock Grid.Row="0" Grid.Column="5" Text="Enabled" HorizontalAlignment="Center" FontSize="20" FontFamily="Arial Black" />
 
-        <Grid x:Name="commandColumn" Grid.Row="1" Grid.Column="1" Height="auto"/>
-        <Grid x:Name="usageColumn" Grid.Row="1" Grid.Column="2" Height="auto"/>
-        <Grid x:Name="descriptionColumn" Grid.Row="1" Grid.Column="3" Height="auto"/>
-        <Grid x:Name="enabledColumn" Grid.Row="1" Grid.Column="4" Height="auto"/>
+            <Grid x:Name="commandColumn" Grid.Row="1" Grid.Column="1" Height="auto"/>
+            <Grid x:Name="usageColumn" Grid.Row="1" Grid.Column="2" Height="auto"/>
+            <Grid x:Name="descriptionColumn" Grid.Row="1" Grid.Column="3" Height="auto"/>
+            <Grid x:Name="privilegeColumn" Grid.Row="1" Grid.Column="4" Height="auto"/>
+            <Grid x:Name="enabledColumn" Grid.Row="1" Grid.Column="5" Height="auto"/>
 
     </Grid>
 

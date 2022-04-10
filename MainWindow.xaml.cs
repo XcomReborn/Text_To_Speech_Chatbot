@@ -109,6 +109,21 @@ namespace WpfApp1
 
     }
 
+    class MyComboBox : ComboBox
+    {
+
+        public string name;
+
+        public MyComboBox()
+        {
+
+            name = "";
+        }
+
+
+
+    }   
+
 
 
 }

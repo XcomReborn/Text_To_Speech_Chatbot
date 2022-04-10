@@ -2,3 +2,6 @@ Dependencies
 .vs
 bin
 obj
+Properties
+WpfApp1.csproj.user
+WpfApp1.csproj.user
