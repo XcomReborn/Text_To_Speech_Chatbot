@@ -74,8 +74,14 @@ namespace TTSBot
 
         private void Client_OnJoinedChannel(object sender, OnJoinedChannelArgs e)
         {
-            Console.WriteLine("Text To Speech Bot Has Connected to This Channel!");
-            client.SendMessage(e.Channel, String.Format("{0}'s TTSBot Has Connected to This Channel!", (char.ToUpper(botSettingManager.settings.botAdminUserName[0]) + botSettingManager.settings.botAdminUserName.Substring(1))));
+            try
+            {
+                if (botSettingManager.settings.settingDictionary["displayConnectionMessage"])
+                {
+                    client.SendMessage(e.Channel, String.Format("{0}'s TTSBot Has Connected to This Channel!", (char.ToUpper(botSettingManager.settings.botAdminUserName[0]) + botSettingManager.settings.botAdminUserName.Substring(1))));
+                }
+            }
+            catch { }
         }
 
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)

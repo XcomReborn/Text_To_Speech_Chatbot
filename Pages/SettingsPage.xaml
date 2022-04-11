@@ -63,6 +63,9 @@
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
                     <RowDefinition/>
 
                 </Grid.RowDefinitions>
@@ -75,6 +78,17 @@
                 <WpfApp1:MyCheckBox x:Name="substituteRegexCheckbox" Grid.Row="3" Grid.Column="0" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Foreground="Red"  Text="Substitute Regular Expressions" VerticalAlignment="Center"/>
 
+                <WpfApp1:MyCheckBox x:Name="displayConnectionMessageCheckbox" Grid.Row="4" Grid.Column="0" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Foreground="Red"  Text="Display Connection Message" VerticalAlignment="Center"/>
+
+                <WpfApp1:MyCheckBox x:Name="displayDisconnectionMessageCheckbox" Grid.Row="5" Grid.Column="0" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Foreground="Red"  Text="Display Disconnection Message" VerticalAlignment="Center"/>
+
+                <WpfApp1:MyCheckBox x:Name="speakUserNameCheckbox" Grid.Row="6" Grid.Column="0" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Foreground="Red"  Text="Speak Username Before Message" VerticalAlignment="Center"/>
+
+                <TextBox x:Name="saidStringTextBox" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="TextBox" VerticalAlignment="Center" Width="120" LostFocus="saidStringTextBoxLostFocus"/>
+                <TextBlock Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="Red" Text="Word between Username and Message"/>
 
             </Grid>
 

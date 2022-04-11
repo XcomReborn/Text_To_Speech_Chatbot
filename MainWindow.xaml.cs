@@ -88,7 +88,10 @@ namespace WpfApp1
                         //frontPage.consoleDebugText.Text = "Paused " + paused.ToString();
                         ((TextToSpeech)Application.Current.Properties["tts"]).synth.Pause();
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                    }
                 }
                 else
                 {
@@ -97,7 +100,10 @@ namespace WpfApp1
                         //frontPage.consoleDebugText.Text = "Paused " + paused.ToString();
                         ((TextToSpeech)Application.Current.Properties["tts"]).synth.Resume();
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                    }
                 }
 
                 //frontPage.consoleDebugText.Text = "Paused " + paused.ToString();
@@ -111,8 +117,9 @@ namespace WpfApp1
                     ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
                     //((TextToSpeech)Application.Current.Properties["tts"]).bot.messageBuffer.Dequeue();
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Debug.WriteLine(ex.ToString());
                     // Potentially thrown if there is nothing to dequeue.
                 }
 
@@ -128,8 +135,9 @@ namespace WpfApp1
                     ((TextToSpeech)Application.Current.Properties["tts"]).bot.messageBuffer.Clear();
                     ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Debug.WriteLine(ex.ToString());
                     // Potentially thrown if there is nothing to dequeue.
                 }
 
@@ -174,21 +182,39 @@ namespace WpfApp1
             // cleanup thread
             try
             {
+                if (((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.settings.settingDictionary["displayDisconnectionMessage"])
+                {
+                    ((TextToSpeech)Application.Current.Properties["tts"]).bot.client.SendMessage(((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.settings.defaultJoinChannel, "Closing TTS Bot.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            try
+            {
                 _listener.UnHookKeyboard();
+            }
+            catch (Exception ex)
+            { 
+            Debug.WriteLine(ex.ToString()); 
+            }
+            try
+            {
                 ((TextToSpeech)Application.Current.Properties["tts"]).cts.Cancel();
             }
             catch (Exception ex)
             {
-                
+                Debug.WriteLine(ex.ToString());
             }
             try
             {
                 ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
 
             }
-            catch
+            catch (Exception ex)
             {
-
+                Debug.WriteLine(ex.ToString());
             }
         }
 

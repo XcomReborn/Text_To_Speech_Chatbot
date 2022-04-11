@@ -153,7 +153,16 @@ namespace TTSBot{
                             }
                             else
                             {
-                                spokenString = userName + " said " + messageToTextToSpeech;
+                                // speak username if enabled
+                                if (bot.botSettingManager.settings.settingDictionary["speakUserNameEnabled"])
+                                {
+                                    spokenString = userName + " " + bot.botSettingManager.settings.saidString + " " + messageToTextToSpeech;
+                                }
+                                else
+                                {
+                                    spokenString = messageToTextToSpeech;
+                                }
+                            
                             }
                             // Initialize a new instance of the SpeechSynthesizer.  
                             synth = new SpeechSynthesizer();
@@ -691,9 +700,29 @@ namespace TTSBot{
         {
 
             System.Console.WriteLine("Closing TTS.");
-            bot.client.SendMessage(e.ChatMessage.Channel, "Closing TTS Bot.");
+            try
+            {
+                if (bot.botSettingManager.settings.settingDictionary["displayDisconnectionMessage"])
+                {
+                    bot.client.SendMessage(e.ChatMessage.Channel, "Closing TTS Bot.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
 
-            // BruteForce the Exit
+            try
+            {
+                cts.Cancel();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            // Possibly need reference to WPF window to close keyboard hooks etc properly.
+            // In the mean time.
+            // BruteForce the Exit.
             Environment.Exit(0);
 
             return true;

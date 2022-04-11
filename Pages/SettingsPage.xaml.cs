@@ -40,6 +40,8 @@ namespace WpfApp1.Pages
             channelNameTextBox.Text = botSettingsManager.settings.defaultJoinChannel;
             adminUserNameTextBox.Text = botSettingsManager.settings.botAdminUserName;
 
+            saidStringTextBox.Text = botSettingsManager.settings.saidString;
+
 
             checkboxList = new List<MyCheckBox>();
 
@@ -59,6 +61,12 @@ namespace WpfApp1.Pages
             checkboxList.Add(substituteCheckbox);
             substituteRegexCheckbox.name = "substituteRegexEnabled";
             checkboxList.Add(substituteRegexCheckbox);
+            displayConnectionMessageCheckbox.name = "displayConnectionMessage";
+            checkboxList.Add(displayConnectionMessageCheckbox);
+            displayDisconnectionMessageCheckbox.name = "displayDisconnectionMessage";
+            checkboxList.Add(displayDisconnectionMessageCheckbox);
+            speakUserNameCheckbox.name = "speakUserNameEnabled";
+            checkboxList.Add(speakUserNameCheckbox);
 
 
             // set checkbox to value saved in setttings
@@ -113,28 +121,28 @@ namespace WpfApp1.Pages
 
         private void botUserNameLostFocus(object sender, RoutedEventArgs e)
         {
-            botSettingsManager.settings.botName = botTwitchUserNameTextBox.Text;
+            botSettingsManager.settings.botName = botTwitchUserNameTextBox.Text.Trim();
             botSettingsManager.Save();
             //((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Load();
         }
 
         private void BotOAuthKeyLostFocus(object sender, RoutedEventArgs e)
         {
-            botSettingsManager.settings.botOAuthKey = botTwitchOAuthKey.Password;
+            botSettingsManager.settings.botOAuthKey = botTwitchOAuthKey.Password.Trim();
             botSettingsManager.Save();
             //((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Load();
         }
 
         private void ChannelNameLostFocus(object sender, RoutedEventArgs e)
         {
-            botSettingsManager.settings.defaultJoinChannel = channelNameTextBox.Text;
+            botSettingsManager.settings.defaultJoinChannel = channelNameTextBox.Text.Trim();
             botSettingsManager.Save();
             //((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Load();
         }
 
         private void AdminUserNameLostFocus(object sender, RoutedEventArgs e)
         {
-            botSettingsManager.settings.botAdminUserName = adminUserNameTextBox.Text;
+            botSettingsManager.settings.botAdminUserName = adminUserNameTextBox.Text.Trim();
             botSettingsManager.Save();
             //((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Load();
         }
@@ -157,6 +165,12 @@ namespace WpfApp1.Pages
         {
             skipAllKeyTextBox.Text = e.Key.ToString();
             botSettingsManager.settings.skipAllKey = (int)e.Key;
+            botSettingsManager.Save();
+        }
+
+        private void saidStringTextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            botSettingsManager.settings.saidString = saidStringTextBox.Text.Trim();
             botSettingsManager.Save();
         }
     }

@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+
 using TTSBot;
 
 namespace WpfApp1.Pages
@@ -53,13 +55,29 @@ namespace WpfApp1.Pages
                 }
             }
             else {
-               ((TextToSpeech)Application.Current.Properties["tts"]).bot.client.Disconnect();
 
+                //Send Disconnect Message before disconnecting:
+                try
+                {
+                    if (((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.settings.settingDictionary["displayDisconnectionMessage"])
+                    {
+                        ((TextToSpeech)Application.Current.Properties["tts"]).bot.client.SendMessage(((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.settings.defaultJoinChannel, "Disconnecting TTS Bot.");
+                    }
+
+                ((TextToSpeech)Application.Current.Properties["tts"]).bot.client.Disconnect();
+                }
+                catch (Exception ex) 
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
                 try
                 {
                     ((TextToSpeech)Application.Current.Properties["tts"]).cts.Cancel();
                 }
-                catch { }
+                catch (Exception ex)
+                { 
+                    Debug.WriteLine(ex.ToString());
+                }
                 connectButton.Content = "Connect";
 
             }

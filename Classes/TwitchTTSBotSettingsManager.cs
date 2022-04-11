@@ -110,6 +110,7 @@ class TwitchTTSBotSettings
     public string defaultJoinChannel = "xcomreborn"; // typically the broadcasters twitch channel
     public string botAdminUserName = "xcomreborn"; // incase you want to use the bot on someone elses channel only you will hear the tts.
     // Stores whose text messages the bot will speak.
+    public string saidString = "said";
 
     public Dictionary<string, bool> settingDictionary = new Dictionary<string, bool>
     {
@@ -120,6 +121,9 @@ class TwitchTTSBotSettings
         {"subscriberSpeaks" , true },
         {"substituteEnabled" , true },
         {"substituteRegexEnabled" , true },
+        {"displayConnectionMessage" , true },
+        {"displayDisconnectionMessage" , true },
+        {"speakUserNameEnabled" , true },
 
     };
 
