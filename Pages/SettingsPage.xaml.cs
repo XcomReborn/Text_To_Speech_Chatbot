@@ -21,20 +21,117 @@ namespace WpfApp1.Pages
     /// Interaction logic for SettingsPage.xaml
     /// </summary>
     public partial class SettingsPage : Page
+
     {
+        private TwitchTTSBotSettingsManager botSettingsManager;
+
+        private List<MyCheckBox> checkboxList;
+
         public SettingsPage()
         {
             InitializeComponent();
 
             TextToSpeech tts = (TextToSpeech)Application.Current.Properties["tts"];
-            TwitchTTSBotSettingsManager botSettingsManager = tts.bot.botSettingManager;
+            botSettingsManager = tts.bot.botSettingManager;
 
-
-            botTwitchUserName.Text = botSettingsManager.settings.botName;
+            // initalize checkboxes to current values
+            botTwitchUserNameTextBox.Text = botSettingsManager.settings.botName;
             botTwitchOAuthKey.Password = botSettingsManager.settings.botOAuthKey;
-            channelName.Text = botSettingsManager.settings.defaultJoinChannel;
-            adminUserName.Text = botSettingsManager.settings.botAdminUserName;
+            channelNameTextBox.Text = botSettingsManager.settings.defaultJoinChannel;
+            adminUserNameTextBox.Text = botSettingsManager.settings.botAdminUserName;
 
+
+            checkboxList = new List<MyCheckBox>();
+
+            streamerCheckbox.name = "broadcasterSpeaks";
+            checkboxList.Add(streamerCheckbox);
+            moderatorCheckbox.name = "modSpeaks";
+            checkboxList.Add(moderatorCheckbox);
+            vipCheckbox.name = "vipSpeaks";
+            checkboxList.Add(vipCheckbox);
+            usersCheckbox.name = "userSpeaks";
+            checkboxList.Add(usersCheckbox);
+            subscribersCheckbox.name = "subscriberSpeaks";
+            checkboxList.Add(subscribersCheckbox);
+
+
+            substituteCheckbox.name = "substituteEnabled";
+            checkboxList.Add(substituteCheckbox);
+            substituteRegexCheckbox.name = "substituteRegexEnabled";
+            checkboxList.Add(substituteRegexCheckbox);
+
+
+            // set checkbox to value saved in setttings
+            foreach (var item in botSettingsManager.settings.settingDictionary)
+            {
+                foreach (var checkbox in checkboxList)
+                {
+                    checkbox.Checked += new RoutedEventHandler(OnCheckBoxSettingsChanged);
+                    checkbox.Unchecked += new RoutedEventHandler(OnCheckBoxSettingsChanged);
+                    if(checkbox.name == item.Key)
+                    {
+                        checkbox.IsChecked = (bool)item.Value;
+                    }
+                }
+
+
+            }
+
+        }
+
+
+        private void OnCheckBoxSettingsChanged(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                foreach (var item in botSettingsManager.settings.settingDictionary)
+                {
+                    foreach (var checkbox in checkboxList)
+                    {
+                        if (((MyCheckBox)sender).name == item.Key)
+                        {
+                            botSettingsManager.settings.settingDictionary[item.Key] = (bool)((MyCheckBox)sender).IsChecked;
+                        }
+                    }
+                }
+                botSettingsManager.Save();
+                //((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Load();
+
+
+            }
+            catch
+            {
+
+            }
+
+        }
+
+        private void botUserNameLostFocus(object sender, RoutedEventArgs e)
+        {
+            botSettingsManager.settings.botName = botTwitchUserNameTextBox.Text;
+            botSettingsManager.Save();
+            //((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Load();
+        }
+
+        private void BotOAuthKeyLostFocus(object sender, RoutedEventArgs e)
+        {
+            botSettingsManager.settings.botOAuthKey = botTwitchOAuthKey.Password;
+            botSettingsManager.Save();
+            //((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Load();
+        }
+
+        private void ChannelNameLostFocus(object sender, RoutedEventArgs e)
+        {
+            botSettingsManager.settings.defaultJoinChannel = channelNameTextBox.Text;
+            botSettingsManager.Save();
+            //((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Load();
+        }
+
+        private void AdminUserNameLostFocus(object sender, RoutedEventArgs e)
+        {
+            botSettingsManager.settings.botAdminUserName = adminUserNameTextBox.Text;
+            botSettingsManager.Save();
+            //((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Load();
         }
     }
 }

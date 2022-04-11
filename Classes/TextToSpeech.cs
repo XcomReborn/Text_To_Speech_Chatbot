@@ -123,56 +123,75 @@ namespace TTSBot{
             // if the user exists they might be set to ignore or message starts with ! char
             if ((!user.ignored) && (!(e.ChatMessage.Message[0] == "!"[0])) && (!(ignoredWords.ContainsIgnoredWord(e.ChatMessage.Message))))
             {
-
-                //only use username said something, if not saying for first time in a row.
-                string spokenString = "";
-
-                //substitute any words in the user message for the ones in the substitution dictionary.
-                string messageToTextToSpeech = SubstituteWords(e);
-
-                System.Console.WriteLine("userName : {0}",userName);
-                System.Console.WriteLine("previousUserName : {0}", previousUserName);                
-
-                if (previousUserName == userName)
-                {
-
-                    spokenString = messageToTextToSpeech;
-
-                }
-                else
-                {
-                    spokenString = userName + " said " + messageToTextToSpeech;
-                }
-                // Initialize a new instance of the SpeechSynthesizer.  
-                SpeechSynthesizer synth = new SpeechSynthesizer();
-
-                // Configure the audio output.   
-                synth.SetOutputToDefaultAudioDevice();
+                    try
+                    {
+                        if  (bot.botSettingManager.settings.settingDictionary["userSpeaks"] ||
+                            (bot.botSettingManager.settings.settingDictionary["vipSpeaks"] == true) &&  (e.ChatMessage.IsVip == true) ||
+                            (bot.botSettingManager.settings.settingDictionary["modSpeaks"] == true) && (e.ChatMessage.IsModerator == true) ||
+                            (bot.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] == true) && (e.ChatMessage.IsBroadcaster == true) ||
+                            (bot.botSettingManager.settings.settingDictionary["subscriberSpeaks"] == true) && (e.ChatMessage.IsSubscriber == true)                             
+                            )
+                        {
 
 
-                // This requires testing to see if the voiceNumber index is correct.
-                // assign a random voice based on userName unless already set
-                int voiceNumber = user.name.GetIntFromString();
-                // make that number fall between the bounds of the voices available
-                ReadOnlyCollection<InstalledVoice> voicesAvailable = synth.GetInstalledVoices();
-                int voicesAvailableCount = voicesAvailable.Count;
-                int defaultVoiceIndex = (voiceNumber)%(voicesAvailableCount);
+                            //only use username said something, if not saying for first time in a row.
+                            string spokenString = "";
+
+                            //substitute any words in the user message for the ones in the substitution dictionary.
+                            string messageToTextToSpeech = SubstituteWords(e);
+
+                            System.Console.WriteLine("userName : {0}", userName);
+                            System.Console.WriteLine("previousUserName : {0}", previousUserName);
+
+                            if (previousUserName == userName)
+                            {
+
+                                spokenString = messageToTextToSpeech;
+
+                            }
+                            else
+                            {
+                                spokenString = userName + " said " + messageToTextToSpeech;
+                            }
+                            // Initialize a new instance of the SpeechSynthesizer.  
+                            SpeechSynthesizer synth = new SpeechSynthesizer();
+
+                            // Configure the audio output.   
+                            synth.SetOutputToDefaultAudioDevice();
 
 
-                //get voice name based on default index
-                synth.SelectVoice(voicesAvailable[defaultVoiceIndex].VoiceInfo.Name);
+                            // This requires testing to see if the voiceNumber index is correct.
+                            // assign a random voice based on userName unless already set
+                            int voiceNumber = user.name.GetIntFromString();
+                            // make that number fall between the bounds of the voices available
+                            ReadOnlyCollection<InstalledVoice> voicesAvailable = synth.GetInstalledVoices();
+                            int voicesAvailableCount = voicesAvailable.Count;
+                            int defaultVoiceIndex = (voiceNumber) % (voicesAvailableCount);
 
-                // Set the voice based on Name
-                if (user.voiceName != ""){
-                synth.SelectVoice(user.voiceName);
-                }
 
-                //synth.SelectVoiceByHints(VoiceGender.NotSet,VoiceAge.NotSet,user.voiceNumber);
-                // Speak a string.  
-                synth.Speak(spokenString);
+                            //get voice name based on default index
+                            synth.SelectVoice(voicesAvailable[defaultVoiceIndex].VoiceInfo.Name);
 
-                previousUserName = userName;
+                            // Set the voice based on Name
+                            if (user.voiceName != "")
+                            {
+                                synth.SelectVoice(user.voiceName);
+                            }
 
+                            //synth.SelectVoiceByHints(VoiceGender.NotSet,VoiceAge.NotSet,user.voiceNumber);
+                            // Speak a string.  
+                            synth.Speak(spokenString);
+
+                            previousUserName = userName;
+
+                        }
+                        // Don't speak message
+                    }
+                    catch
+                    {
+                        
+                    }
+ 
             }
 
             }
@@ -182,44 +201,63 @@ namespace TTSBot{
 
         private string SubstituteWords(OnMessageReceivedArgs e){
 
+            
+
             //check if there are any keys to substitute
             if (substitutionWords.subwords.words.Count > 0){
 
             string output = "";
             try{
 
-                
-                var words = string.Join("|", substitutionWords.subwords.words.Keys);
-                System.Console.WriteLine("Word Sub Pattern Matches : " + $@"\b({words})\b");
-                // This next line replaces all the dictionary key matches with their value pairs, exclusive bound words. How does it work? No idea!
+                    // check if subsitute is enabled
+                    if (bot.botSettingManager.settings.settingDictionary["substituteEnabled"])
+                    {
 
-                try{
-                output = Regex.Replace(e.ChatMessage.Message, $@"\b({words})\b", delegate (Match m) 
-                { 
+                        var words = string.Join("|", substitutionWords.subwords.words.Keys);
+                        System.Console.WriteLine("Word Sub Pattern Matches : " + $@"\b({words})\b");
+                        // This next line replaces all the dictionary key matches with their value pairs, exclusive bound words. How does it work? No idea!
 
-                    return substitutionWords.subwords.words[Regex.Escape(m.Value)].PickRandom();  }  
-                
-                );
-                }catch{
-                    System.Console.WriteLine("Regex match failed.");
-                }
+                        try
+                        {
+                            output = Regex.Replace(e.ChatMessage.Message, $@"\b({words})\b", delegate (Match m)
+                            {
 
-                
+                                return substitutionWords.subwords.words[Regex.Escape(m.Value)].PickRandom();
+                            }
 
-                if (substitutionWords.subwords.regularexpressions.Count > 0){
-
-                     // this will iterate over regular expressions in the regular expression dictionary so care should be taken with the entered patterns.
-                    foreach (KeyValuePair<string, List<string>> item in substitutionWords.subwords.regularexpressions){
-                        try{
-                        output = Regex.Replace(output, item.Key, item.Value.PickRandom());
-                        System.Console.WriteLine("Regex Sub Pattern Matches : " + item.Key + " : Sub : " + item.Value);
-                        }catch{
-                            System.Console.WriteLine("Regex match failed.");
-                            System.Console.WriteLine("Regex Sub Pattern Matches : " + item.Key + " : Sub : " + item.Value);
+                            );
                         }
+                        catch
+                        {
+                            System.Console.WriteLine("Regex match failed.");
+                        }
+
                     }
 
-                }
+                    // check if substituteregex enabled
+                    if (bot.botSettingManager.settings.settingDictionary["substituteRegexEnabled"])
+                    {
+
+                        if (substitutionWords.subwords.regularexpressions.Count > 0)
+                        {
+
+                            // this will iterate over regular expressions in the regular expression dictionary so care should be taken with the entered patterns.
+                            foreach (KeyValuePair<string, List<string>> item in substitutionWords.subwords.regularexpressions)
+                            {
+                                try
+                                {
+                                    output = Regex.Replace(output, item.Key, item.Value.PickRandom());
+                                    System.Console.WriteLine("Regex Sub Pattern Matches : " + item.Key + " : Sub : " + item.Value);
+                                }
+                                catch
+                                {
+                                    System.Console.WriteLine("Regex match failed.");
+                                    System.Console.WriteLine("Regex Sub Pattern Matches : " + item.Key + " : Sub : " + item.Value);
+                                }
+                            }
+
+                        }
+                    }
                 
 
 

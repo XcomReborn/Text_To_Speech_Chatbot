@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Windows.Input;
+using System.Collections.Generic;
 
 [System.Serializable]
 
@@ -101,7 +102,6 @@ class TwitchTTSBotSettingsManager
 }
 
 [System.Serializable]
-
 class TwitchTTSBotSettings
 {
 
@@ -110,10 +110,19 @@ class TwitchTTSBotSettings
     public string defaultJoinChannel = "xcomreborn"; // typically the broadcasters twitch channel
     public string botAdminUserName = "xcomreborn"; // incase you want to use the bot on someone elses channel only you will hear the tts.
     // Stores whose text messages the bot will speak.
-    public bool broadcasterSpeaks = true;
-    public bool modSpeaks = true;
-    public bool vipSpeaks = true;
-    public bool userSpeaks = true;
+
+    public Dictionary<string, bool> settingDictionary = new Dictionary<string, bool>
+    {
+        {"broadcasterSpeaks" , true },
+        {"modSpeaks" , true },
+        {"vipSpeaks" , true },
+        {"userSpeaks" , true },
+        {"subscriberSpeaks" , true },
+        {"substituteEnabled" , true },
+        {"substituteRegexEnabled" , true },
+
+    };
+
     //Keys for speech message stack manipulation
     public Key pauseKey = Key.Multiply;
     public Key skipKey = Key.OemPlus;
