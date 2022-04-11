@@ -77,6 +77,11 @@ namespace WpfApp1.Pages
 
             }
 
+            // initialize all the hotkeys to the saved values.
+            pauseKeyTextBox.Text = ((Key)botSettingsManager.settings.pauseKey).ToString();
+            skipKeyTextBox.Text = ((Key)botSettingsManager.settings.skipKey).ToString();
+            skipAllKeyTextBox.Text = ((Key)botSettingsManager.settings.skipAllKey).ToString();
+
         }
 
 
@@ -132,6 +137,27 @@ namespace WpfApp1.Pages
             botSettingsManager.settings.botAdminUserName = adminUserNameTextBox.Text;
             botSettingsManager.Save();
             //((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Load();
+        }
+
+        private void PauseKeySelectionKeyDown(object sender, KeyEventArgs e)
+        {
+            pauseKeyTextBox.Text = e.Key.ToString();
+            botSettingsManager.settings.pauseKey = (int)e.Key;
+            botSettingsManager.Save();
+        }
+
+        private void SkipKeySelectionKeyDown(object sender, KeyEventArgs e)
+        {
+            skipKeyTextBox.Text = e.Key.ToString();
+            botSettingsManager.settings.skipKey = (int)e.Key;
+            botSettingsManager.Save();
+        }
+
+        private void SkipAllKeySelectionKeyDown(object sender, KeyEventArgs e)
+        {
+            skipAllKeyTextBox.Text = e.Key.ToString();
+            botSettingsManager.settings.skipAllKey = (int)e.Key;
+            botSettingsManager.Save();
         }
     }
 }
