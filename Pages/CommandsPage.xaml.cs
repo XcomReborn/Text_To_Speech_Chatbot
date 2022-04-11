@@ -97,19 +97,19 @@ namespace WpfApp1.Pages
 
                 TextBlock myTextBlock = new TextBlock();
                 myTextBlock.Foreground = Brushes.Blue;
-                myTextBlock.Text = "User";
+                myTextBlock.Text = "Everyone";
                 comboBox.Items.Add(myTextBlock);
                 TextBlock myTextBlock2 = new TextBlock();
                 myTextBlock2.Foreground = Brushes.Blue;
-                myTextBlock2.Text = "VIP";
+                myTextBlock2.Text = "VIP + Admin";
                 comboBox.Items.Add(myTextBlock2);
                 TextBlock myTextBlock3 = new TextBlock();
                 myTextBlock3.Foreground = Brushes.Blue;
-                myTextBlock3.Text = "Mod";
+                myTextBlock3.Text = "Mod + Admin";
                 comboBox.Items.Add(myTextBlock3);
                 TextBlock myTextBlock4 = new TextBlock();
                 myTextBlock4.Foreground = Brushes.Blue;
-                myTextBlock4.Text = "Streamer";
+                myTextBlock4.Text = "Admin Only";
                 comboBox.Items.Add(myTextBlock4);
 
                 Grid privilegeGrid = new Grid();

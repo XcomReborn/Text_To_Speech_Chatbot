@@ -310,8 +310,8 @@ namespace TTSBot{
                 }
 
 
-                // Broadcaster Commands
-                if ((e.ChatMessage.IsBroadcaster) || (bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
+                // Admin + Broadcaster Commands
+                if ((bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
                 {
                     foreach (var item in commmandDict){
                         if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.STREAMER)){
@@ -321,8 +321,8 @@ namespace TTSBot{
                     }
                 }
 
-                // Moderator commands 
-                if ((e.ChatMessage.IsModerator) || (e.ChatMessage.IsBroadcaster) || (bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
+                // Admin + Moderator commands 
+                if ((e.ChatMessage.IsModerator) || (bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
                 {
                     foreach (var item in commmandDict){
                     if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.MOD)){
@@ -332,8 +332,8 @@ namespace TTSBot{
                 }                   
                 }
 
-                // VIP commands 
-                if ((e.ChatMessage.IsVip) || (e.ChatMessage.IsModerator) || (e.ChatMessage.IsBroadcaster) || (bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
+                // Admin + VIP commands 
+                if ((e.ChatMessage.IsVip) || (bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
                 {
                     foreach (var item in commmandDict)
                     {
@@ -345,18 +345,17 @@ namespace TTSBot{
                     }
                 }
 
-                // USER commands 
-                if ( (true) || (e.ChatMessage.IsVip) || (e.ChatMessage.IsModerator) || (e.ChatMessage.IsBroadcaster) || (bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
-                {
-                    foreach (var item in commmandDict)
-                    {
-                        if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.USER))
-                        {
-                            item.Key.DynamicInvoke(e);
-                        }
+                // USER/Everyone commands 
 
+                foreach (var item in commmandDict)
+                {
+                    if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.USER))
+                    {
+                        item.Key.DynamicInvoke(e);
                     }
+
                 }
+
 
             }
 
