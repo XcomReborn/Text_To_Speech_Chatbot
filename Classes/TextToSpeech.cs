@@ -206,7 +206,7 @@ namespace TTSBot{
             //check if there are any keys to substitute
             if (substitutionWords.subwords.words.Count > 0){
 
-            string output = "";
+            string output = e.ChatMessage.Message;
             try{
 
                     // check if subsitute is enabled

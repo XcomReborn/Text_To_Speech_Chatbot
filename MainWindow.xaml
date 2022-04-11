@@ -9,6 +9,7 @@
         WindowStyle= "SingleBorderWindow"
         ResizeMode="CanResizeWithGrip"
         Background="#FFF"
+        Closing="Window_Closing"
         >
 
 

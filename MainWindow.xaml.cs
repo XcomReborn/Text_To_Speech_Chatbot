@@ -16,6 +16,10 @@ using WpfApp1.Pages;
 using TTSBot;
 using System.Diagnostics;
 
+using System; // EventArgs
+using System.ComponentModel; // CancelEventArgs
+using System.Windows; // window
+
 namespace WpfApp1
 {
     /// <summary>
@@ -71,7 +75,24 @@ namespace WpfApp1
         private void MouseDownOnSettingsText(object sender, MouseButtonEventArgs e)
         {
             MainFrame.Content = new SettingsPage();
+
         }
+
+        void Window_Closing(object sender, CancelEventArgs e)
+        {
+            // cleanup thread
+            try
+            {
+                ((TextToSpeech)Application.Current.Properties["tts"]).cts.Cancel();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
+
     }
 
     class MyCheckBox : CheckBox { 
