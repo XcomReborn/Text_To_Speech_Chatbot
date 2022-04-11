@@ -59,6 +59,12 @@ search for and install TwitchLib 3.3.0
 search for and install System.Speech 6.0.0
 search for and install NewtonSoft.Json 13.0.1
 
+If using Visual Studio 2022.
+
+Install Packages using: Tools -> NuGet Package Manager -> Manage NuGet Packages For Solution...
+search for and install TwitchLib 3.3.0
+search for and install System.Speech 6.0.0
+search for and install NewtonSoft.Json 13.0.1
 
 
 
