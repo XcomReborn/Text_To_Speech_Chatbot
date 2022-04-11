@@ -124,9 +124,9 @@ class TwitchTTSBotSettings
     };
 
     //Keys for speech message stack manipulation
-    public Key pauseKey = Key.Multiply;
-    public Key skipKey = Key.OemPlus;
-    public Key skipAllKey = Key.OemBackslash;
+    public int pauseKey = ((int)Key.Add);
+    public int skipKey = ((int)Key.Multiply);
+    public int skipAllKey = ((int)Key.Divide);
 
     public override string ToString()
     {

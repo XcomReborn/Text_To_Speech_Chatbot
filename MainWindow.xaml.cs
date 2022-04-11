@@ -20,6 +20,8 @@ using System; // EventArgs
 using System.ComponentModel; // CancelEventArgs
 using System.Windows; // window
 
+using DesktopWPFAppLowLevelKeyboardHook;
+
 namespace WpfApp1
 {
     /// <summary>
@@ -28,11 +30,14 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
 
+        public FrontPage frontPage;  
 
+        private LowLevelKeyboardListener _listener;
+
+        private bool paused = false;
 
         public MainWindow()
         {
-           Debug.WriteLine("program started");
 
         Bot bot = new Bot();
         TextToSpeech tts = new TextToSpeech(bot);
@@ -42,10 +47,96 @@ namespace WpfApp1
         Application.Current.Properties["tts"] = tts;
         Application.Current.Properties["commands"] = commands;
 
+        InitializeComponent();
 
-            InitializeComponent();
-            MainFrame.Content = new FrontPage();
+        frontPage = new FrontPage();
+
+        MainFrame.Content = frontPage;
+
         }
+
+        
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Window Loaded Called");
+
+            _listener = new LowLevelKeyboardListener();
+            _listener.OnKeyPressed += _listener_OnKeyPressed;
+
+            _listener.HookKeyboard();
+        }
+
+        void _listener_OnKeyPressed(object sender, KeyPressedArgs e)
+        {
+            //frontPage.consoleDebugText.Text += e.KeyPressed.ToString();
+
+            TwitchTTSBotSettingsManager botSettingManager = ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager;
+
+            //Debug.WriteLine(botSettingManager.settings.pauseKey.ToString());
+            //Debug.WriteLine(botSettingManager.settings.skipKey.ToString());
+            //Debug.WriteLine(botSettingManager.settings.skipAllKey.ToString());
+
+            if (e.KeyPressed == (Key)botSettingManager.settings.pauseKey)
+            {
+                // toggle paused
+                paused = !paused;
+                if (paused)
+                {
+                    try
+                    {
+                        //frontPage.consoleDebugText.Text = "Paused " + paused.ToString();
+                        ((TextToSpeech)Application.Current.Properties["tts"]).synth.Pause();
+                    }
+                    catch { }
+                }
+                else
+                {
+                    try
+                    {
+                        //frontPage.consoleDebugText.Text = "Paused " + paused.ToString();
+                        ((TextToSpeech)Application.Current.Properties["tts"]).synth.Resume();
+                    }
+                    catch { }
+                }
+
+                //frontPage.consoleDebugText.Text = "Paused " + paused.ToString();
+                //frontPage.consoleDebugText.Text += " Pause Key pressed ";
+            }
+            if (e.KeyPressed == (Key)botSettingManager.settings.skipKey)
+            {
+                try
+                {
+                    //frontPage.consoleDebugText.Text += " Skip Key Pressed ";
+                    ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
+                    //((TextToSpeech)Application.Current.Properties["tts"]).bot.messageBuffer.Dequeue();
+                }
+                catch
+                {
+                    // Potentially thrown if there is nothing to dequeue.
+                }
+
+
+            }
+            if (e.KeyPressed == (Key)botSettingManager.settings.skipAllKey)
+            {
+                // add skip all messages logic
+                //
+                try
+                {
+                    //frontPage.consoleDebugText.Text += " Skip All Key pressed ";
+                    ((TextToSpeech)Application.Current.Properties["tts"]).bot.messageBuffer.Clear();
+                    ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
+                }
+                catch
+                {
+                    // Potentially thrown if there is nothing to dequeue.
+                }
+
+            }
+        }
+
+
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
@@ -69,7 +160,7 @@ namespace WpfApp1
 
         private void MouseDownOnTextToSpeechText(object sender, MouseButtonEventArgs e)
         {
-            MainFrame.Content = new FrontPage();
+            MainFrame.Content = frontPage;
         }
 
         private void MouseDownOnSettingsText(object sender, MouseButtonEventArgs e)
@@ -83,15 +174,23 @@ namespace WpfApp1
             // cleanup thread
             try
             {
+                _listener.UnHookKeyboard();
                 ((TextToSpeech)Application.Current.Properties["tts"]).cts.Cancel();
             }
             catch (Exception ex)
             {
+                
+            }
+            try
+            {
+                ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
+
+            }
+            catch
+            {
 
             }
         }
-
-
 
     }
 

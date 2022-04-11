@@ -13,10 +13,19 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="77*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="connectButton" Grid.Row="0" Content="Connect" MaxHeight="50" MaxWidth="200" Click="OnClickConnectButton"/>
+        <Button Grid.Column="0" Grid.Row="1" x:Name="connectButton" MaxHeight="50" MaxWidth="200" Click="OnClickConnectButton" Margin="0,0,0,10"/>
+
+        <!-- Information Pannel For Debugging only-->
+        <TextBlock  x:Name="consoleDebugText" Grid.Column="0" Grid.Row="2" TextWrapping="Wrap" Text="" Foreground="Red"/>
+
+
+
 
     </Grid>
 </Page>

@@ -10,6 +10,7 @@
         ResizeMode="CanResizeWithGrip"
         Background="#FFF"
         Closing="Window_Closing"
+        Loaded="Window_Loaded"
         >
 
 

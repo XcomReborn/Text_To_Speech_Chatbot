@@ -44,6 +44,8 @@ namespace TTSBot{
 
         public CancellationTokenSource cts;
 
+        public SpeechSynthesizer synth = new SpeechSynthesizer();
+
 
         public TextToSpeech (Bot bot) {
 
@@ -154,7 +156,9 @@ namespace TTSBot{
                                 spokenString = userName + " said " + messageToTextToSpeech;
                             }
                             // Initialize a new instance of the SpeechSynthesizer.  
-                            SpeechSynthesizer synth = new SpeechSynthesizer();
+                            synth = new SpeechSynthesizer();
+
+                       
 
                             // Configure the audio output.   
                             synth.SetOutputToDefaultAudioDevice();
