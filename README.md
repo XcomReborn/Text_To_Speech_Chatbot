@@ -67,5 +67,8 @@ search for and install System.Speech 6.0.0
 search for and install NewtonSoft.Json 13.0.1
 
 
+<OutputType> WinExe
+<TargetFramework> net6.0-windows
+<UseWPF> true
 
 
