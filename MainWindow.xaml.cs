@@ -218,6 +218,10 @@ namespace WpfApp1
             }
         }
 
+        private void MouseDownOnAboutText(object sender, MouseButtonEventArgs e)
+        {
+            MainFrame.Content = new AboutPage();
+        }
     }
 
     class MyCheckBox : CheckBox { 

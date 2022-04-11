@@ -70,6 +70,14 @@
                        HorizontalAlignment="Center"
                        FontFamily="Fonts/#Dosis" MouseDown="MouseDownOnSettingsText" />
 
+            <TextBlock  x:Name="About"
+                        Text="About"  
+                       Foreground="LightGray" 
+                       Grid.Column="4" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center"
+                       FontFamily="Fonts/#Dosis" MouseDown="MouseDownOnAboutText" />
+
 
         </Grid>
 
