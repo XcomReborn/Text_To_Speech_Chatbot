@@ -36,8 +36,6 @@ namespace TTSBot{
 
         public bool running = true;
 
-        public bool paused = false;
-
         public TTSBotCommands commands;
 
         public Thread MainLoopMessageStackCheckingThread;
@@ -86,14 +84,12 @@ namespace TTSBot{
                     if (bot.messageBuffer.Count > 0)
                     {
 
-                        if (!paused)
-                        {
                             OnMessageReceivedArgs e = bot.messageBuffer.Dequeue();
                             // check for any text to speech chat commands 
                             CheckForChatCommands(e);
                             // Send to speech
                             Speak(e);
-                        }
+
                     }
 
                 }

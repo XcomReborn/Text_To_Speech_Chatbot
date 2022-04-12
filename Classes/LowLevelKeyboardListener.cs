@@ -28,8 +28,11 @@ namespace DesktopWPFAppLowLevelKeyboardHook
     public class LowLevelKeyboardListener
     {
         private const int WH_KEYBOARD_LL = 13;
-        private const int WM_KEYDOWN = 0x0100;
-        private const int WM_SYSKEYDOWN = 0x0104;
+        private const int WM_KEYDOWN = 0x100;//KEYDOWN
+        private const int WM_KEYUP = 0x101;//KEYUP
+        private const int WM_SYSKEYDOWN = 0x104;//SYSKEYDOWN
+        private const int WM_SYSKEYUP = 0x105;//SYSKEYUP
+
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
@@ -46,7 +49,8 @@ namespace DesktopWPFAppLowLevelKeyboardHook
 
         public delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-        public event EventHandler<KeyPressedArgs> OnKeyPressed;
+        public event EventHandler<KeyPressedArgs> OnKeyDown;
+        public event EventHandler<KeyPressedArgs> OnKeyUp;
 
         private LowLevelKeyboardProc _proc;
         private IntPtr _hookID = IntPtr.Zero;
@@ -81,8 +85,16 @@ namespace DesktopWPFAppLowLevelKeyboardHook
             {
                 int vkCode = Marshal.ReadInt32(lParam);
 
-                if (OnKeyPressed != null) { OnKeyPressed(this, new KeyPressedArgs(KeyInterop.KeyFromVirtualKey(vkCode))); }
+                if (OnKeyDown != null) { OnKeyDown(this, new KeyPressedArgs(KeyInterop.KeyFromVirtualKey(vkCode))); }
             }
+
+            if (nCode >= 0 && wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP)
+            {
+                int vkCode = Marshal.ReadInt32(lParam);
+
+                if (OnKeyDown != null) { OnKeyUp(this, new KeyPressedArgs(KeyInterop.KeyFromVirtualKey(vkCode))); }
+            }
+
 
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }

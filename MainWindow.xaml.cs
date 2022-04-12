@@ -62,20 +62,50 @@ namespace WpfApp1
             Debug.WriteLine("Window Loaded Called");
 
             _listener = new LowLevelKeyboardListener();
-            _listener.OnKeyPressed += _listener_OnKeyPressed;
+            _listener.OnKeyDown += _listener_OnKeyDown;
+            _listener.OnKeyUp += _listener_OnKeyUp;
 
             _listener.HookKeyboard();
         }
 
-        void _listener_OnKeyPressed(object sender, KeyPressedArgs e)
+        void _listener_OnKeyUp(object sender, KeyPressedArgs e)
         {
-            //frontPage.consoleDebugText.Text += e.KeyPressed.ToString();
-
             TwitchTTSBotSettingsManager botSettingManager = ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager;
+            if (e.KeyPressed == (Key)botSettingManager.settings.skipKey)
+            {
+                    frontPage.skipIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
+                    frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
+                    ResumeSpeech();
 
-            //Debug.WriteLine(botSettingManager.settings.pauseKey.ToString());
-            //Debug.WriteLine(botSettingManager.settings.skipKey.ToString());
-            //Debug.WriteLine(botSettingManager.settings.skipAllKey.ToString());
+            }
+            if (e.KeyPressed == (Key)botSettingManager.settings.skipAllKey)
+            {
+                    frontPage.skipAllIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
+                    frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
+                ResumeSpeech();
+
+
+            }
+
+
+        }
+
+        private void ResumeSpeech()
+        {
+            try
+            {
+                paused = false;
+                ((TextToSpeech)Application.Current.Properties["tts"]).synth.Resume();
+            }
+            catch (Exception ex)    
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+        }
+
+        void _listener_OnKeyDown(object sender, KeyPressedArgs e)
+        {
+            TwitchTTSBotSettingsManager botSettingManager = ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager;
 
             if (e.KeyPressed == (Key)botSettingManager.settings.pauseKey)
             {
@@ -85,8 +115,9 @@ namespace WpfApp1
                 {
                     try
                     {
-                        //frontPage.consoleDebugText.Text = "Paused " + paused.ToString();
-                        ((TextToSpeech)Application.Current.Properties["tts"]).synth.Pause();
+                                ((TextToSpeech)Application.Current.Properties["tts"]).synth.Pause();
+
+                        frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.Red);
                     }
                     catch (Exception ex)
                     {
@@ -97,25 +128,27 @@ namespace WpfApp1
                 {
                     try
                     {
-                        //frontPage.consoleDebugText.Text = "Paused " + paused.ToString();
+
+
                         ((TextToSpeech)Application.Current.Properties["tts"]).synth.Resume();
+                        frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
                     }
                     catch (Exception ex)
                     {
                         Debug.WriteLine(ex.ToString());
                     }
                 }
-
-                //frontPage.consoleDebugText.Text = "Paused " + paused.ToString();
-                //frontPage.consoleDebugText.Text += " Pause Key pressed ";
             }
             if (e.KeyPressed == (Key)botSettingManager.settings.skipKey)
             {
                 try
                 {
-                    //frontPage.consoleDebugText.Text += " Skip Key Pressed ";
+                    // requires resume before disposal or will not speak on new object
+                    ResumeSpeech();
                     ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
-                    //((TextToSpeech)Application.Current.Properties["tts"]).bot.messageBuffer.Dequeue();
+                    ((TextToSpeech)Application.Current.Properties["tts"]).synth = new System.Speech.Synthesis.SpeechSynthesizer();
+                    frontPage.skipIndicator.Fill = new SolidColorBrush(Colors.Red);
+
                 }
                 catch (Exception ex)
                 {
@@ -131,9 +164,12 @@ namespace WpfApp1
                 //
                 try
                 {
-                    //frontPage.consoleDebugText.Text += " Skip All Key pressed ";
+                    // requires resume before disposal or will not speak on new object
+                    ResumeSpeech();
                     ((TextToSpeech)Application.Current.Properties["tts"]).bot.messageBuffer.Clear();
                     ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
+                    ((TextToSpeech)Application.Current.Properties["tts"]).synth = new System.Speech.Synthesis.SpeechSynthesizer();
+                    frontPage.skipAllIndicator.Fill = new SolidColorBrush(Colors.Red);
                 }
                 catch (Exception ex)
                 {
