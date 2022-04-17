@@ -13,7 +13,7 @@ Use the program graphical user interface and navigate to Settings:
 Set the connection channel and admin name to your twitch name then press the connect button.
 
 
-## Bot Commands.
+## Bot Commands. - All commands to be set by the user and enabled/disabled.
 
 ### default Bot commands for Streamer/AdminUserName:
 
