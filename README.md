@@ -6,7 +6,7 @@
 
 Download executable file here : https://github.com/XcomReborn/CSharpTwitchTTSBotGUI/releases
 
-Downloaed exe file under assets drop-down and run.
+Download exe file under assets drop-down and run in a new folder.
 
 Use the program graphical user interface and navigate to Settings:
 
