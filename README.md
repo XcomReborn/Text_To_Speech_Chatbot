@@ -4,7 +4,14 @@
 
 ## User Instructions for Windows:
 
--- To be added once released--
+Download executable file here : https://github.com/XcomReborn/CSharpTwitchTTSBotGUI/releases
+
+Downloaed exe file under assets drop-down and run.
+
+Use the program graphical user interface and navigate to Settings:
+
+Set the connection channel and admin name to your twitch name then press the connect button.
+
 
 ## Bot Commands.
 
