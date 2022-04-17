@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 
 using TTSBot;
+using System.Windows.Controls.Primitives;
 
 namespace WpfApp1.Pages
 {
@@ -34,6 +35,44 @@ namespace WpfApp1.Pages
             else
             {
                 connectButton.Content = "Disconnect";
+            }
+
+
+
+        }
+
+        private bool dragStarted = false;
+
+        private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            SetVolume(((Slider)sender).Value);
+            this.dragStarted = false;
+        }
+
+        private void Slider_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            this.dragStarted = true;
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!dragStarted)
+                SetVolume(((Slider)sender).Value);
+        }
+
+        private void SetVolume(double value)
+        {
+            string volumeString = value.ToString();
+            Debug.WriteLine(String.Format("Slider value : {0}", volumeString));
+            try
+            {
+                ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.settings.volume = Convert.ToInt32(value);
+                ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Save();
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
 
         }
@@ -85,6 +124,15 @@ namespace WpfApp1.Pages
 
         }
 
+        private void volumeSliderLoaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Set volume slider initial value
+                TwitchTTSBotSettingsManager twitchTTSBotSettingManager = ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager;
+                volumeSlider.Value = Convert.ToDouble(twitchTTSBotSettingManager.settings.volume);
+            }catch (Exception ex) { Debug.WriteLine(ex.ToString()); };
+        }
     }
 }
 

@@ -127,6 +127,9 @@ class TwitchTTSBotSettings
 
     };
 
+    //Volume
+    public int volume = 100;
+
     //Keys for speech message stack manipulation
     public int pauseKey = ((int)Key.Add);
     public int skipKey = ((int)Key.Multiply);

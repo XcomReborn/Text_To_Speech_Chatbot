@@ -187,6 +187,9 @@ namespace TTSBot{
                                 synth.SelectVoice(user.voiceName);
                             }
 
+                            // Set the speech volume
+                            synth.Volume = (int)bot.botSettingManager.settings.volume;
+
                             //synth.SelectVoiceByHints(VoiceGender.NotSet,VoiceAge.NotSet,user.voiceNumber);
                             // Speak a string.  
                             synth.Speak(spokenString);

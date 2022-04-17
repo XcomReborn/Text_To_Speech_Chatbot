@@ -24,19 +24,28 @@
         </Grid.RowDefinitions>
 
         <Button Grid.Column="2" Grid.Row="1" x:Name="connectButton" MaxHeight="50" MaxWidth="200" Click="OnClickConnectButton" Margin="0,0,5,10">
-        <Button.Resources>
-            <Style TargetType="Border">
-                <Setter Property="CornerRadius" Value="5"/>
-            </Style>
-        </Button.Resources>
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Button.Resources>
         </Button>
 
-        <Canvas Height="100" Width="100" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top">
+        <Grid Grid.Row="1" Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="303*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="17*"/>
+            </Grid.RowDefinitions>
 
-            <!-- Draws a circle with a blue interior and a black outline. -->
-            <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal">
-            <Ellipse x:Name="pauseIndicator"
+            <Canvas Height="100" Width="100" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1">
+
+                <!-- Draws a circle with a blue interior and a black outline. -->
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse x:Name="pauseIndicator"
             Width="25"
             Height="25"
             Fill="LightGreen"
@@ -44,13 +53,13 @@
             StrokeThickness="4"
             Canvas.Left="0"
             Canvas.Top="0" />
-                <TextBlock Text="Pause" VerticalAlignment="Center" Margin="10 0 0 0"></TextBlock>
-            </StackPanel>
+                        <TextBlock Text="Pause" VerticalAlignment="Center" Margin="10 0 0 0"></TextBlock>
+                    </StackPanel>
 
-            <!-- Draws a circle with a blue interior and a black outline. -->
-            <StackPanel Orientation="Horizontal">
-            
-            <Ellipse x:Name="skipIndicator"
+                    <!-- Draws a circle with a blue interior and a black outline. -->
+                    <StackPanel Orientation="Horizontal">
+
+                        <Ellipse x:Name="skipIndicator"
             Width="25"
             Height="25"
             Fill="LightGreen"
@@ -58,12 +67,12 @@
             StrokeThickness="4"
             Canvas.Left="0"
             />
-            <TextBlock Text="Skip" VerticalAlignment="Center" Margin="10 0 0 0"></TextBlock>
-            </StackPanel>
+                        <TextBlock Text="Skip" VerticalAlignment="Center" Margin="10 0 0 0"></TextBlock>
+                    </StackPanel>
 
-            <!-- Draws a circle with a blue interior and a black outline. -->
-            <StackPanel Orientation="Horizontal">
-            <Ellipse x:Name="skipAllIndicator"
+                    <!-- Draws a circle with a blue interior and a black outline. -->
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse x:Name="skipAllIndicator"
             Width="25"
             Height="25"
             Fill="LightGreen"
@@ -71,12 +80,14 @@
             StrokeThickness="4"
             Canvas.Left="0"
             />
-            <TextBlock Text="Skip All" VerticalAlignment="Center" Margin="10 0 0 0"></TextBlock>
-            </StackPanel>
-            </StackPanel>
-        </Canvas>
-        
+                        <TextBlock Text="Skip All" VerticalAlignment="Center" Margin="10 0 0 0"></TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Canvas>
+            <Slider Grid.Row="2" Grid.Column="0" x:Name="volumeSlider" TickFrequency="5" Maximum="100" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted" TickPlacement="BottomRight" Loaded="volumeSliderLoaded"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Volume" Foreground="Gray" />
 
+        </Grid>
 
         <!-- Information Pannel For Debugging only-->
         <TextBlock  x:Name="consoleDebugText" Grid.Column="0" Grid.Row="2" TextWrapping="Wrap" Text="" Foreground="Red" Margin="0,0,5,0"/>

@@ -111,12 +111,14 @@ namespace WpfApp1
             {
                 // toggle paused
                 paused = !paused;
+
+
+
                 if (paused)
                 {
                     try
                     {
-                                ((TextToSpeech)Application.Current.Properties["tts"]).synth.Pause();
-
+                        ((TextToSpeech)Application.Current.Properties["tts"]).synth.Pause();
                         frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.Red);
                     }
                     catch (Exception ex)
@@ -128,7 +130,6 @@ namespace WpfApp1
                 {
                     try
                     {
-
 
                         ((TextToSpeech)Application.Current.Properties["tts"]).synth.Resume();
                         frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
