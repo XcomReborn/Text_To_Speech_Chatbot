@@ -123,6 +123,7 @@ class SubstitutionWords{
 
                     SubWords? wordDictionary = JsonConvert.DeserializeObject<SubWords>(str);
                     this.subwords = wordDictionary;
+
                 }
                 sr.Close();
                 fs.Close();

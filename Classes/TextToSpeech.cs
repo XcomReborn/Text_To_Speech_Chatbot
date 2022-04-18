@@ -20,9 +20,9 @@ using ExtensionMethods;
 using System.Diagnostics;
 
 
-namespace TTSBot{
+namespace TTSBot {
 
-    class TextToSpeech{
+    class TextToSpeech {
 
         public Bot bot;
 
@@ -45,9 +45,9 @@ namespace TTSBot{
         public SpeechSynthesizer synth = new SpeechSynthesizer();
 
 
-        public TextToSpeech (Bot bot) {
+        public TextToSpeech(Bot bot) {
 
-            this.commands =  new TTSBotCommands(this);
+            this.commands = new TTSBotCommands(this);
 
             this.bot = bot;
 
@@ -57,12 +57,12 @@ namespace TTSBot{
         }
 
 
-        public void run(){
+        public void run() {
 
 
             cts.Dispose();
             cts = new CancellationTokenSource();
-           
+
             MainLoopMessageStackCheckingThread = new Thread(() => MainLoop(cts.Token));
 
             MainLoopMessageStackCheckingThread.Start();
@@ -76,7 +76,7 @@ namespace TTSBot{
             try
             {
                 Debug.WriteLine(cancellationToken.IsCancellationRequested.ToString());
-          
+
                 while (this.running)
                 {
                     if (cancellationToken.IsCancellationRequested) { break; }
@@ -84,18 +84,18 @@ namespace TTSBot{
                     if (bot.messageBuffer.Count > 0)
                     {
 
-                            OnMessageReceivedArgs e = bot.messageBuffer.Dequeue();
-                            // check for any text to speech chat commands 
-                            CheckForChatCommands(e);
-                            // Send to speech
-                            Speak(e);
+                        OnMessageReceivedArgs e = bot.messageBuffer.Dequeue();
+                        // check for any text to speech chat commands 
+                        CheckForChatCommands(e);
+                        // Send to speech
+                        Speak(e);
 
                     }
 
                 }
 
                 Debug.WriteLine("Exiting MainLoop on message buffer thread.");
-            }catch (Exception e)
+            } catch (Exception e)
             {
 
                 // Thread Abort Exception will throw here.
@@ -116,18 +116,18 @@ namespace TTSBot{
             }
 
             // ensure message is not null
-            if (e.ChatMessage.Message != null){
+            if (e.ChatMessage.Message != null) {
 
-            // if the user exists they might be set to ignore or message starts with ! char
-            if ((!user.ignored) && (!(e.ChatMessage.Message[0] == "!"[0])) && (!(ignoredWords.ContainsIgnoredWord(e.ChatMessage.Message))))
-            {
+                // if the user exists they might be set to ignore or message starts with ! char
+                if ((!user.ignored) && (!(e.ChatMessage.Message[0] == "!"[0])) && (!(ignoredWords.ContainsIgnoredWord(e.ChatMessage.Message))))
+                {
                     try
                     {
-                        if  (bot.botSettingManager.settings.settingDictionary["userSpeaks"] ||
-                            (bot.botSettingManager.settings.settingDictionary["vipSpeaks"] == true) &&  (e.ChatMessage.IsVip == true) ||
+                        if (bot.botSettingManager.settings.settingDictionary["userSpeaks"] ||
+                            (bot.botSettingManager.settings.settingDictionary["vipSpeaks"] == true) && (e.ChatMessage.IsVip == true) ||
                             (bot.botSettingManager.settings.settingDictionary["modSpeaks"] == true) && (e.ChatMessage.IsModerator == true) ||
                             (bot.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] == true) && (e.ChatMessage.IsBroadcaster == true) ||
-                            (bot.botSettingManager.settings.settingDictionary["subscriberSpeaks"] == true) && (e.ChatMessage.IsSubscriber == true)                             
+                            (bot.botSettingManager.settings.settingDictionary["subscriberSpeaks"] == true) && (e.ChatMessage.IsSubscriber == true)
                             )
                         {
 
@@ -158,12 +158,12 @@ namespace TTSBot{
                                 {
                                     spokenString = messageToTextToSpeech;
                                 }
-                            
+
                             }
                             // Initialize a new instance of the SpeechSynthesizer.  
                             synth = new SpeechSynthesizer();
 
-                       
+
 
                             // Configure the audio output.   
                             synth.SetOutputToDefaultAudioDevice();
@@ -201,54 +201,56 @@ namespace TTSBot{
                     }
                     catch
                     {
-                        
+
                     }
- 
-            }
+
+                }
 
             }
 
         }
 
 
-        private string SubstituteWords(OnMessageReceivedArgs e){
+        private string SubstituteWords(OnMessageReceivedArgs e) {
 
-            
-
-            //check if there are any keys to substitute
-            if (substitutionWords.subwords.words.Count > 0){
 
             string output = e.ChatMessage.Message;
-            try{
 
-                    // check if subsitute is enabled
-                    if (bot.botSettingManager.settings.settingDictionary["substituteEnabled"])
+            try {
+
+                // check if subsitute is enabled
+                if (bot.botSettingManager.settings.settingDictionary["substituteEnabled"])
+                {
+                    if (substitutionWords.subwords.words != null)
                     {
-
-                        var words = string.Join("|", substitutionWords.subwords.words.Keys);
-                        System.Console.WriteLine("Word Sub Pattern Matches : " + $@"\b({words})\b");
-                        // This next line replaces all the dictionary key matches with their value pairs, exclusive bound words. How does it work? No idea!
-
-                        try
+                        if (substitutionWords.subwords.words.Count > 0)
                         {
-                            output = Regex.Replace(e.ChatMessage.Message, $@"\b({words})\b", delegate (Match m)
+
+                            try
                             {
+                                var words = string.Join("|", substitutionWords.subwords.words.Keys);
+                                System.Console.WriteLine("Word Sub Pattern Matches : " + $@"\b({words})\b");
+                                output = Regex.Replace(e.ChatMessage.Message, $@"\b({words})\b", delegate (Match m)
+                                {
 
-                                return substitutionWords.subwords.words[Regex.Escape(m.Value)].PickRandom();
+                                    return substitutionWords.subwords.words[Regex.Escape(m.Value)].PickRandom();
+                                }
+
+                                );
                             }
-
-                            );
+                            catch
+                            {
+                                System.Console.WriteLine("Regex match failed.");
+                            }
                         }
-                        catch
-                        {
-                            System.Console.WriteLine("Regex match failed.");
-                        }
-
                     }
 
-                    // check if substituteregex enabled
-                    if (bot.botSettingManager.settings.settingDictionary["substituteRegexEnabled"])
-                    {
+                }
+
+                // check if substituteregex enabled
+                if (bot.botSettingManager.settings.settingDictionary["substituteRegexEnabled"])
+                {
+                    if (substitutionWords.subwords.regularexpressions != null) {
 
                         if (substitutionWords.subwords.regularexpressions.Count > 0)
                         {
@@ -267,14 +269,13 @@ namespace TTSBot{
                                     System.Console.WriteLine("Regex Sub Pattern Matches : " + item.Key + " : Sub : " + item.Value);
                                 }
                             }
-
                         }
+
                     }
-                
-
-
+                }
 
             }
+
             catch (Exception exp)
             {
                 System.Console.WriteLine(exp.ToString());
@@ -282,12 +283,10 @@ namespace TTSBot{
                 return "";
 
             }
+
             return output;
             
-            }else{
-            return e.ChatMessage.Message;
-            }
-        }
+       }
 
 
 
