@@ -41,6 +41,14 @@ Set the connection channel and admin name to your twitch name then press the con
 **!unignore [userName]** - unignores the following user name.  
 **!blacklist** - lists all the usernames in the blacklist (!ignorelist).  
 
+## Adding Extra Voices.
+
+You can add extra voices following the tutorial currently avilable here: https://www.ghacks.net/2018/08/11/unlock-all-windows-10-tts-voices-system-wide-to-get-more-of-them/
+
+Or you can download and execute the file for adding the extra keys here: https://github.com/XcomReborn/CSharpTwitchTTSBotGUI/tree/main/RegistryAddExtraEnglishVoices
+
+Please read the README!.txt file first here: https://github.com/XcomReborn/CSharpTwitchTTSBotGUI/blob/main/RegistryAddExtraEnglishVoices/IMPORTANT_README!.txt
+
 
 ## Compilation Instructions.
  
