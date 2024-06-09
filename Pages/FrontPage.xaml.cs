@@ -43,6 +43,17 @@ namespace WpfApp1.Pages
                 connectButtonTwitch.Content = "Disconnect";
             }
 
+            if (!((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.client.IsConnected)
+            {
+                connectButtonKick.Content = "Connect";
+            }
+            else
+            {
+                connectButtonKick.Content = "Disconnect";
+            }
+
+
+
 
 
         }
@@ -88,16 +99,13 @@ namespace WpfApp1.Pages
         {
             if (  !((TextToSpeech)Application.Current.Properties["tts"]).twitch_bot.client.IsConnected ){
                 // reload commands
-                ((TextToSpeech)Application.Current.Properties["tts"]).commands.Load();
-
+                //((TextToSpeech)Application.Current.Properties["tts"]).commands.Load();
 
                 bool success = ((TextToSpeech)Application.Current.Properties["tts"]).twitch_bot.Connect();
-                ((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.Connect();
+                
 
                 if (success)
                 {
-                    ((TextToSpeech)Application.Current.Properties["tts"]).run();
-
                     connectButtonTwitch.Content = "Disconnect";
                 }
             }
@@ -120,11 +128,11 @@ namespace WpfApp1.Pages
                 }
                 try
                 {
-                    ((TextToSpeech)Application.Current.Properties["tts"]).cts.Cancel();
+                   // ((TextToSpeech)Application.Current.Properties["tts"]).cts.Cancel();
                 }
                 catch (Exception ex)
                 { 
-                    Debug.WriteLine(ex.ToString());
+                   // Debug.WriteLine(ex.ToString());
                 }
                 connectButtonTwitch.Content = "Connect";
 
@@ -135,13 +143,12 @@ namespace WpfApp1.Pages
 
         private async void OnClickConnectButtonKick(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("Button Pressed.");
-            Debug.WriteLine(settingsManager.settings.kickChannelUserName);
-            Debug.WriteLine(settingsManager.settings.KickPassword);
-            Debug.WriteLine(settingsManager.settings.Kick2FAToken);
-
-
-            await ((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.kickApi.Messages.SendMessageAsync(12267684, "This is a test message.");
+            bool connected = ((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.client.IsConnected;
+            if (!connected)
+            {
+                ((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.Connect();
+                connectButtonKick.IsEnabled = false;
+            }
 
         }
 

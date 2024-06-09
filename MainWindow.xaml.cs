@@ -58,11 +58,15 @@ namespace WpfApp1
             InitializeComponent();
 
             frontPage = new FrontPage(settings_manager);
+            Application.Current.Properties["frontPage"] = frontPage;
+
             commandsPage = new CommandsPage();
             settingsPage = new SettingsPage(settings_manager);
             aboutPage = new AboutPage();
 
             MainFrame.Content = frontPage;
+
+            tts.run();
 
         }
 

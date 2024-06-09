@@ -6,7 +6,9 @@
       xmlns:local="clr-namespace:WpfApp1.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="FrontPage">
+      Title="FrontPage"
+      Background="White"
+      >
 
     <Grid ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.IsSharedSizeScope="True" UseLayoutRounding="True" RenderTransformOrigin="0,0">
         <Grid.ColumnDefinitions>
@@ -26,13 +28,17 @@
         <StackPanel Grid.Column="2"
                     Grid.Row="1"
                     Orientation="Vertical">
-
+            <TextBlock
+                Text="Twitch Chat"
+                HorizontalAlignment="Center"
+                />
             <Button  
                 x:Name="connectButtonTwitch" 
                 MaxHeight="50" 
                 MaxWidth="200" 
                 Click="OnClickConnectButton" 
-                Height="111">
+                Height="100"
+                VerticalAlignment="Center">
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -40,12 +46,17 @@
                 </Button.Resources>
             </Button>
 
+
+            <TextBlock
+                Text="Kick Chat"
+                HorizontalAlignment="Center"
+                />
             <Button  
-        x:Name="connectButtonKick" 
-        MaxHeight="50" 
-        MaxWidth="200" 
-        Click="OnClickConnectButtonKick" 
-        Margin="0,75,1,205" Height="111">
+                x:Name="connectButtonKick" 
+                MaxHeight="50" 
+                MaxWidth="200" 
+                Click="OnClickConnectButtonKick" 
+                Height="100">
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="5"/>

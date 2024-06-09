@@ -52,7 +52,8 @@ namespace TTSBot {
         public Queue<ChatData> messageBuffer = new Queue<ChatData>();
 
 
-        public TextToSpeech() {
+        public TextToSpeech()
+        {
 
             this.commands = new CommandsManager(this);
             this.twitch_bot = new TwitchBot(this);

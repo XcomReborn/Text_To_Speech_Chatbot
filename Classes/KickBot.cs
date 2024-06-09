@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using KickLib.Models;
 using System.Net.Mail;
+using WpfApp1.Pages;
+using System.Diagnostics;
+using KickLib.Models.Response.v1.Channels;
 
 
 
@@ -23,6 +26,8 @@ namespace TTSBot
         public string userName = "xereborn";
         public Queue<ChatMessageEventArgs> messageBuffer = new Queue<ChatMessageEventArgs>();
         public TextToSpeech text_to_speech;
+        public IKickClient client = new KickClient();
+        private ChannelResponse? channelInfo;
 
         public KickBot(TextToSpeech text_to_speech)
         {
@@ -32,11 +37,10 @@ namespace TTSBot
 
         public async Task Connect()
         {
-            var channelInfo = await this.kickApi.Channels.GetChannelInfoAsync(this.botSettingManager.settings.kickChannelUserName);
-
-            IKickClient client = new KickClient();
+            channelInfo = await this.kickApi.Channels.GetChannelInfoAsync(this.botSettingManager.settings.kickChannelUserName);
 
             client.OnMessage += Client_OnMessageReceived;
+            client.OnConnected += Client_OnConnected;
 
             var authSettings = new AuthenticationSettings(botSettingManager.settings.kickChannelUserName, botSettingManager.settings.KickPassword)
             {
@@ -48,8 +52,6 @@ namespace TTSBot
             await client.ListenToChatRoomAsync(channelInfo.Chatroom.Id);
 
             await client.ConnectAsync();
-
-
 
         }
 
@@ -75,6 +77,18 @@ namespace TTSBot
             text_to_speech.messageBuffer.Enqueue(chat_data);
 
         }
+
+        private void Client_OnConnected(object sender, EventArgs e) 
+        {
+
+            //((FrontPage)Application.Current.Properties["frontPage"]).connectButtonKick.Content = "Disconnect";
+            Debug.WriteLine("Kick Connected");
+            if (channelInfo != null) {
+                SendMessage(channelInfo.Chatroom.Id.ToString(), "TTS Connected.");
+                    }
+            
+        }
+
 
 
     }
