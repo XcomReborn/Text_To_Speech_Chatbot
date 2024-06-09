@@ -93,11 +93,11 @@ namespace TTSBot {
                     if (this.messageBuffer.Count > 0)
                     {
 
-                        ChatData chat_message = this.messageBuffer.Dequeue();
+                        ChatData chatData = this.messageBuffer.Dequeue();
                         // check for any text to speech chat commands 
-                        CheckForChatCommands(chat_message);
+                        CheckForChatCommands(chatData);
                         // Send to speech
-                        Speak(chat_message);
+                        Speak(chatData);
 
                     }
 
@@ -111,13 +111,13 @@ namespace TTSBot {
             }
         }
 
-        public void Speak(ChatData chat_message)
+        public void Speak(ChatData chatData)
         {
 
-            string user_name = chat_message.user_name;
+            string user_name = chatData.user_name;
 
             //check for alias
-            ChatUser user = new ChatUser(user_name, origin:chat_message.origin);
+            ChatUser user = new ChatUser(user_name, origin:chatData.origin);
             if (users.IsUserInList(user))
             {
                 user = users.GetUser(user);
@@ -125,27 +125,44 @@ namespace TTSBot {
             }
 
             // ensure message is not null
-            if (chat_message.message != null) {
+            if (chatData.message != null) {
 
                 // if the user exists they might be set to ignore or message starts with ! char
-                if ((!user.ignored) && (!(chat_message.message[0] == "!"[0])) && (!(ignoredWords.ContainsIgnoredWord(chat_message.message))))
+                if ((!user.ignored) && (!(chatData.message[0] == "!"[0])) && (!(ignoredWords.ContainsIgnoredWord(chatData.message))))
                 {
                     try
                     {
                         if (this.botSettingManager.settings.settingDictionary["userSpeaks"] ||
-                            (this.botSettingManager.settings.settingDictionary["vipSpeaks"] == true) && (chat_message.user_level == Commands.UserLevel.VIP) ||
-                            (this.botSettingManager.settings.settingDictionary["modSpeaks"] == true) && (chat_message.user_level == Commands.UserLevel.MOD) ||
-                            (this.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] == true) && (chat_message.user_level == Commands.UserLevel.STREAMER) ||
-                            (this.botSettingManager.settings.settingDictionary["subscriberSpeaks"] == true) && (chat_message.is_subscriber == true)
-                            )
+                            this.botSettingManager.settings.settingDictionary["modSpeaks"] && chatData.user_level == Commands.UserLevel.MOD ||
+                            this.botSettingManager.settings.settingDictionary["vipSpeaks"] && chatData.user_level == Commands.UserLevel.VIP ||
+                            this.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] && chatData.user_level == Commands.UserLevel.STREAMER ||
+                            this.botSettingManager.settings.settingDictionary["subscriberSpeaks"] && chatData.is_subscriber)
                         {
+
+                            if (!this.botSettingManager.settings.settingDictionary["vipSpeaks"] && chatData.user_level == Commands.UserLevel.VIP)
+                            {
+                                return;
+                            }
+                            if (!this.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] && chatData.user_level == Commands.UserLevel.STREAMER)
+                            {
+                                return;
+                            }
+                            if (!this.botSettingManager.settings.settingDictionary["modSpeaks"] && chatData.user_level == Commands.UserLevel.MOD)
+                            {
+                                return;
+                            }
+                            if (!this.botSettingManager.settings.settingDictionary["subscriberSpeaks"] && chatData.is_subscriber)
+                            {
+                                return;
+                            }
+
 
 
                             //only use username said something, if not saying for first time in a row.
                             string spokenString = "";
 
                             //substitute any words in the user message for the ones in the substitution dictionary.
-                            string messageToTextToSpeech = SubstituteWords(chat_message);
+                            string messageToTextToSpeech = SubstituteWords(chatData);
 
                             System.Console.WriteLine("user_name : {0}", user_name);
                             System.Console.WriteLine("previousUserName : {0}", previousUserName);
