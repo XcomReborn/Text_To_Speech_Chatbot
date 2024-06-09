@@ -16,6 +16,7 @@ using System.Diagnostics;
 
 using TTSBot;
 using System.Windows.Controls.Primitives;
+using System.Configuration;
 
 namespace WpfApp1.Pages
 {
@@ -24,17 +25,21 @@ namespace WpfApp1.Pages
     /// </summary>
     public partial class FrontPage : Page
     {
-        public FrontPage()
+        private SettingsManager settingsManager;
+        public FrontPage(SettingsManager settingsManager)
         {
+
+            this.settingsManager = settingsManager;
+
             InitializeComponent();
 
-            if ( !((TextToSpeech)Application.Current.Properties["tts"]).bot.client.IsConnected)
+            if ( !((TextToSpeech)Application.Current.Properties["tts"]).twitch_bot.client.IsConnected)
             {
-                connectButton.Content = "Connect";
+                connectButtonTwitch.Content = "Connect";
             }
             else
             {
-                connectButton.Content = "Disconnect";
+                connectButtonTwitch.Content = "Disconnect";
             }
 
 
@@ -66,8 +71,8 @@ namespace WpfApp1.Pages
             Debug.WriteLine(String.Format("Slider value : {0}", volumeString));
             try
             {
-                ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.settings.volume = Convert.ToInt32(value);
-                ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.Save();
+                settingsManager.settings.volume = Convert.ToInt32(value);
+                settingsManager.Save();
 
             }
             catch (Exception ex)
@@ -80,17 +85,19 @@ namespace WpfApp1.Pages
 
         private void OnClickConnectButton(object sender, RoutedEventArgs e)
         {
-            if (  !((TextToSpeech)Application.Current.Properties["tts"]).bot.client.IsConnected ){
+            if (  !((TextToSpeech)Application.Current.Properties["tts"]).twitch_bot.client.IsConnected ){
                 // reload commands
                 ((TextToSpeech)Application.Current.Properties["tts"]).commands.Load();
 
 
-                bool success = ((TextToSpeech)Application.Current.Properties["tts"]).bot.Connect();
+                bool success = ((TextToSpeech)Application.Current.Properties["tts"]).twitch_bot.Connect();
+                ((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.Connect();
+
                 if (success)
                 {
                     ((TextToSpeech)Application.Current.Properties["tts"]).run();
 
-                    connectButton.Content = "Disconnect";
+                    connectButtonTwitch.Content = "Disconnect";
                 }
             }
             else {
@@ -98,12 +105,13 @@ namespace WpfApp1.Pages
                 //Send Disconnect Message before disconnecting:
                 try
                 {
-                    if (((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.settings.settingDictionary["displayDisconnectionMessage"])
+
+                    if (settingsManager.settings.settingDictionary["displayDisconnectionMessage"])
                     {
-                        ((TextToSpeech)Application.Current.Properties["tts"]).bot.client.SendMessage(((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.settings.defaultJoinChannel, "Disconnecting TTS Bot.");
+                        ((TextToSpeech)Application.Current.Properties["tts"]).twitch_bot.client.SendMessage(settingsManager.settings.defaultJoinChannel, "Disconnecting TTS TwitchBot.");
                     }
 
-                ((TextToSpeech)Application.Current.Properties["tts"]).bot.client.Disconnect();
+                ((TextToSpeech)Application.Current.Properties["tts"]).twitch_bot.client.Disconnect();
                 }
                 catch (Exception ex) 
                 {
@@ -117,20 +125,26 @@ namespace WpfApp1.Pages
                 { 
                     Debug.WriteLine(ex.ToString());
                 }
-                connectButton.Content = "Connect";
+                connectButtonTwitch.Content = "Connect";
 
             }
 
 
         }
 
+        private void OnClickConnectButtonKick(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Button Pressed.");
+            Debug.WriteLine(settingsManager.settings.BotOAuthKey);
+        }
+
         private void volumeSliderLoaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Set volume slider initial value
-                TwitchTTSBotSettingsManager twitchTTSBotSettingManager = ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager;
-                volumeSlider.Value = Convert.ToDouble(twitchTTSBotSettingManager.settings.volume);
+                // Set volume slider initial value exception will be thrown here
+                
+                volumeSlider.Value = Convert.ToDouble(settingsManager.settings.volume);
             }catch (Exception ex) { Debug.WriteLine(ex.ToString()); };
         }
     }

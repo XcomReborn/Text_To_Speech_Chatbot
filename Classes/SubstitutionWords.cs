@@ -7,8 +7,8 @@ using System.Collections;
 using System.Linq;
 using System.IO;
 
-
-class SubstitutionWords{
+namespace TTSBot;
+public class SubstitutionWords{
 
     public SubWords subwords = new SubWords();
 
@@ -153,7 +153,7 @@ class SubstitutionWords{
 
 
 [System.Serializable]
-class SubWords{
+public class SubWords{
 
     public Dictionary<string, List<string>> words = new Dictionary<string, List<string>>();
     public Dictionary<string, List<string>> regularexpressions = new Dictionary<string, List<string>>(); 

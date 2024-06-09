@@ -8,7 +8,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="FrontPage">
 
-    <Grid>
+    <Grid ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.IsSharedSizeScope="True" UseLayoutRounding="True" RenderTransformOrigin="0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="40*"/>
@@ -17,19 +17,43 @@
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="77*"/>
-            <RowDefinition Height="6*"/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="373"/>
+            <RowDefinition Height="29*"/>
+            <RowDefinition Height="24*"/>
         </Grid.RowDefinitions>
 
-        <Button Grid.Column="2" Grid.Row="1" x:Name="connectButton" MaxHeight="50" MaxWidth="200" Click="OnClickConnectButton" Margin="0,0,5,10">
-            <Button.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="5"/>
-                </Style>
-            </Button.Resources>
-        </Button>
+        <StackPanel Grid.Column="2"
+                    Grid.Row="1"
+                    Orientation="Vertical">
+
+            <Button  
+                x:Name="connectButtonTwitch" 
+                MaxHeight="50" 
+                MaxWidth="200" 
+                Click="OnClickConnectButton" 
+                Height="111">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+
+            <Button  
+        x:Name="connectButtonKick" 
+        MaxHeight="50" 
+        MaxWidth="200" 
+        Click="OnClickConnectButtonKick" 
+        Margin="0,75,1,205" Height="111">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+
+        </StackPanel>
 
         <Grid Grid.Row="1" Grid.Column="3">
             <Grid.RowDefinitions>

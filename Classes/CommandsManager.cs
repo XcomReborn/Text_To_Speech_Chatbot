@@ -7,7 +7,7 @@ using System.IO;
 
 namespace TTSBot;
 
-class TTSBotCommands{
+public class CommandsManager{
 
     private TextToSpeech tts;
 
@@ -16,14 +16,14 @@ class TTSBotCommands{
     public string commandFilePath = AppDomain.CurrentDomain.BaseDirectory + "/data/commandFile.json";
 
 
-    public TTSBotCommands(TextToSpeech tts){
+    public CommandsManager(TextToSpeech tts){
 
         this.tts = tts;
 
                     // Default Dictionary
             commands = new Dictionary<Delegate, Commands>
         {
-            { tts.CloseTTS, new Commands("!closetts",Commands.UserLevel.STREAMER, "!closetts", true , "{0}","Closes the TTS bot.") },
+            { tts.CloseTTS, new Commands("!closetts",Commands.UserLevel.STREAMER, "!closetts", true , "{0}","Closes the TTS twitch_bot.") },
             { tts.SetIgnoreWord, new Commands("!ignoreword",Commands.UserLevel.STREAMER, "!ignoreword", true , "{0} [word]","Adds word to be ignored, will not speak the entire user message.") },
             { tts.SetUnignoreWord, new Commands("!unignoreword",Commands.UserLevel.STREAMER, "!unignoreword", true , "{0} [word]" ,"Removes word if it has previously been added to the ignore word list.") },
             { tts.SetAlias, new Commands("!alias",Commands.UserLevel.MOD, "!alias", true , "{0} #","Gives the chat user name an alternative alias in text to speech.") },
@@ -201,36 +201,3 @@ class TTSBotCommands{
 
 
 }
-
-
-[System.Serializable]
-class Commands{
-
-    public enum UserLevel { USER, VIP, MOD, STREAMER};
-
-    public readonly string name;
-
-    public UserLevel privilageLevel = UserLevel.STREAMER;
-
-    public string ttsComparisonCommand = "";
-
-    public bool enabled = true;
-
-    public string usage = "";
-
-    public string description = "";
-
-    public Commands (string name = "", UserLevel privilageLevel = UserLevel.STREAMER, string ttsComparisonCommand = "", bool enabled = true, string usage = "",string description = ""){
-
-        this.name = name;
-        this.privilageLevel = privilageLevel;
-        this.ttsComparisonCommand = ttsComparisonCommand;
-        this.enabled = enabled;
-        this.usage = usage;
-        this.description = description;
-
-    }
-
-
-}
-

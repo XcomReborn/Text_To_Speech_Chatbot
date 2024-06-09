@@ -5,15 +5,15 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 
-
-class TwitchUsers
+namespace TTSBot;
+public class ChatUsers
 {
 
-    public List<TwitchUser> users { get; set; } = new List<TwitchUser>();
+    public List<ChatUser> users { get; set; } = new List<ChatUser>();
 
     public string dataPath = AppDomain.CurrentDomain.BaseDirectory + "/data/twitchUserData.json";
 
-    public TwitchUsers()
+    public ChatUsers()
     {
 
         // attempt to load settings if fails use defaults and create file
@@ -31,7 +31,7 @@ class TwitchUsers
 
         try
         {
-            users.Add(new TwitchUser(username.ToLower(), alias));
+            users.Add(new ChatUser(username.ToLower(), alias));
         }
         catch
         {
@@ -40,7 +40,7 @@ class TwitchUsers
         return true;
     }
 
-    public bool AddUser(TwitchUser user)
+    public bool AddUser(ChatUser user)
     {
         try
         {
@@ -51,7 +51,7 @@ class TwitchUsers
         return true;
     }
 
-    public bool RemoveUser(TwitchUser user)
+    public bool RemoveUser(ChatUser user)
     {
 
         return users.Remove(user);
@@ -59,20 +59,20 @@ class TwitchUsers
     }
 
     public 
-    TwitchUser GetUser(TwitchUser user)
+    ChatUser GetUser(ChatUser user)
     {
 
         return users.Find(x => x.name.ToLower() == user.name.ToLower());
 
     }
 
-    TwitchUser GetUser(string userName){
+    ChatUser GetUser(string userName){
 
         return users.Find(x => x.name.ToLower() == userName.ToLower());
 
     }
 
-    public bool IsUserInList(TwitchUser user)
+    public bool IsUserInList(ChatUser user)
     {
 
         if (users.Find(x => x.name.ToLower() == user.name.ToLower()) != null)
@@ -109,7 +109,7 @@ class TwitchUsers
                 if (str != null)
                 {
                     Console.WriteLine(str);
-                    List<TwitchUser>? twitchUsers = JsonSerializer.Deserialize<List<TwitchUser>>(str);
+                    List<ChatUser>? twitchUsers = JsonSerializer.Deserialize<List<ChatUser>>(str);
                     this.users = twitchUsers;
                 }
                 sr.Close();
@@ -157,7 +157,7 @@ class TwitchUsers
     public override string ToString()
     {
         string output = "";
-        foreach (TwitchUser user in users)
+        foreach (ChatUser user in users)
         {
 
             output += user.ToString() + "\n";

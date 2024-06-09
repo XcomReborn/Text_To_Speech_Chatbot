@@ -8,16 +8,18 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="AboutPage">
 
-    <Grid>
+    <Grid RenderTransformOrigin="0.5,0.5" 
+          ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+          ScrollViewer.VerticalScrollBarVisibility="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="19*"/>
             <ColumnDefinition Width="39*"/>
             <ColumnDefinition Width="19*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="73*"/>
-            <RowDefinition Height="14*"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="365"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="350">

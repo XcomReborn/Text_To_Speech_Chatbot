@@ -18,15 +18,18 @@ using System.Threading;
 using ExtensionMethods;
 
 using System.Diagnostics;
+using KickLib.Client;
+using System.Windows;
 
 
 namespace TTSBot {
 
-    class TextToSpeech {
+    public class TextToSpeech {
 
-        public Bot bot;
+        public TwitchBot? twitch_bot;
+        public KickBot? kick_bot;
 
-        private TwitchUsers users = new TwitchUsers();
+        private ChatUsers users = new ChatUsers();
 
         private IgnoredWords ignoredWords = new IgnoredWords();
 
@@ -34,9 +37,11 @@ namespace TTSBot {
 
         private string previousUserName = "";
 
+        private SettingsManager botSettingManager;
+
         public bool running = true;
 
-        public TTSBotCommands commands;
+        public CommandsManager commands;
 
         public Thread MainLoopMessageStackCheckingThread;
 
@@ -44,15 +49,18 @@ namespace TTSBot {
 
         public SpeechSynthesizer synth = new SpeechSynthesizer();
 
+        public Queue<ChatData> messageBuffer = new Queue<ChatData>();
 
-        public TextToSpeech(Bot bot) {
 
-            this.commands = new TTSBotCommands(this);
+        public TextToSpeech() {
 
-            this.bot = bot;
+            this.commands = new CommandsManager(this);
+            this.twitch_bot = new TwitchBot(this);
+            this.kick_bot = new KickBot(this);
+
+            this.botSettingManager = Application.Current.Properties["settings_manager"] as SettingsManager;
 
             cts = new CancellationTokenSource();
-
 
         }
 
@@ -61,18 +69,18 @@ namespace TTSBot {
 
 
             cts.Dispose();
+
             cts = new CancellationTokenSource();
 
             MainLoopMessageStackCheckingThread = new Thread(() => MainLoop(cts.Token));
 
             MainLoopMessageStackCheckingThread.Start();
 
-
-
         }
 
         public void MainLoop(CancellationToken cancellationToken)
         {
+
             try
             {
                 Debug.WriteLine(cancellationToken.IsCancellationRequested.ToString());
@@ -81,14 +89,14 @@ namespace TTSBot {
                 {
                     if (cancellationToken.IsCancellationRequested) { break; }
 
-                    if (bot.messageBuffer.Count > 0)
+                    if (this.messageBuffer.Count > 0)
                     {
 
-                        OnMessageReceivedArgs e = bot.messageBuffer.Dequeue();
+                        ChatData chat_message = this.messageBuffer.Dequeue();
                         // check for any text to speech chat commands 
-                        CheckForChatCommands(e);
+                        CheckForChatCommands(chat_message);
                         // Send to speech
-                        Speak(e);
+                        Speak(chat_message);
 
                     }
 
@@ -102,32 +110,32 @@ namespace TTSBot {
             }
         }
 
-        public void Speak(OnMessageReceivedArgs e)
+        public void Speak(ChatData chat_message)
         {
 
-            string userName = e.ChatMessage.Username;
+            string user_name = chat_message.user_name;
 
             //check for alias
-            TwitchUser user = new TwitchUser(userName);
+            ChatUser user = new ChatUser(user_name, origin:chat_message.origin);
             if (users.IsUserInList(user))
             {
                 user = users.GetUser(user);
-                userName = user.alias;
+                user_name = user.alias;
             }
 
             // ensure message is not null
-            if (e.ChatMessage.Message != null) {
+            if (chat_message.message != null) {
 
                 // if the user exists they might be set to ignore or message starts with ! char
-                if ((!user.ignored) && (!(e.ChatMessage.Message[0] == "!"[0])) && (!(ignoredWords.ContainsIgnoredWord(e.ChatMessage.Message))))
+                if ((!user.ignored) && (!(chat_message.message[0] == "!"[0])) && (!(ignoredWords.ContainsIgnoredWord(chat_message.message))))
                 {
                     try
                     {
-                        if (bot.botSettingManager.settings.settingDictionary["userSpeaks"] ||
-                            (bot.botSettingManager.settings.settingDictionary["vipSpeaks"] == true) && (e.ChatMessage.IsVip == true) ||
-                            (bot.botSettingManager.settings.settingDictionary["modSpeaks"] == true) && (e.ChatMessage.IsModerator == true) ||
-                            (bot.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] == true) && (e.ChatMessage.IsBroadcaster == true) ||
-                            (bot.botSettingManager.settings.settingDictionary["subscriberSpeaks"] == true) && (e.ChatMessage.IsSubscriber == true)
+                        if (this.botSettingManager.settings.settingDictionary["userSpeaks"] ||
+                            (this.botSettingManager.settings.settingDictionary["vipSpeaks"] == true) && (chat_message.user_level == Commands.UserLevel.VIP) ||
+                            (this.botSettingManager.settings.settingDictionary["modSpeaks"] == true) && (chat_message.user_level == Commands.UserLevel.MOD) ||
+                            (this.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] == true) && (chat_message.user_level == Commands.UserLevel.STREAMER) ||
+                            (this.botSettingManager.settings.settingDictionary["subscriberSpeaks"] == true) && (chat_message.is_subscriber == true)
                             )
                         {
 
@@ -136,12 +144,12 @@ namespace TTSBot {
                             string spokenString = "";
 
                             //substitute any words in the user message for the ones in the substitution dictionary.
-                            string messageToTextToSpeech = SubstituteWords(e);
+                            string messageToTextToSpeech = SubstituteWords(chat_message);
 
-                            System.Console.WriteLine("userName : {0}", userName);
+                            System.Console.WriteLine("user_name : {0}", user_name);
                             System.Console.WriteLine("previousUserName : {0}", previousUserName);
 
-                            if (previousUserName == userName)
+                            if (previousUserName == user_name)
                             {
 
                                 spokenString = messageToTextToSpeech;
@@ -150,9 +158,9 @@ namespace TTSBot {
                             else
                             {
                                 // speak username if enabled
-                                if (bot.botSettingManager.settings.settingDictionary["speakUserNameEnabled"])
+                                if (this.botSettingManager.settings.settingDictionary["speakUserNameEnabled"])
                                 {
-                                    spokenString = userName + " " + bot.botSettingManager.settings.saidString + " " + messageToTextToSpeech;
+                                    spokenString = user_name + " " + this.botSettingManager.settings.saidString + " " + messageToTextToSpeech;
                                 }
                                 else
                                 {
@@ -188,13 +196,13 @@ namespace TTSBot {
                             }
 
                             // Set the speech volume
-                            synth.Volume = (int)bot.botSettingManager.settings.volume;
+                            synth.Volume = (int)this.botSettingManager.settings.volume;
 
                             //synth.SelectVoiceByHints(VoiceGender.NotSet,VoiceAge.NotSet,user.voiceNumber);
                             // Speak a string.  
                             synth.Speak(spokenString);
 
-                            previousUserName = userName;
+                            previousUserName = user_name;
 
                         }
                         // Don't speak message
@@ -211,15 +219,15 @@ namespace TTSBot {
         }
 
 
-        private string SubstituteWords(OnMessageReceivedArgs e) {
+        private string SubstituteWords(ChatData chat_message) {
 
 
-            string output = e.ChatMessage.Message;
+            string output = chat_message.message;
 
             try {
 
                 // check if subsitute is enabled
-                if (bot.botSettingManager.settings.settingDictionary["substituteEnabled"])
+                if (this.botSettingManager.settings.settingDictionary["substituteEnabled"])
                 {
                     if (substitutionWords.subwords.words != null)
                     {
@@ -230,7 +238,7 @@ namespace TTSBot {
                             {
                                 var words = string.Join("|", substitutionWords.subwords.words.Keys);
                                 System.Console.WriteLine("Word Sub Pattern Matches : " + $@"\b({words})\b");
-                                output = Regex.Replace(e.ChatMessage.Message, $@"\b({words})\b", delegate (Match m)
+                                output = Regex.Replace(chat_message.message, $@"\b({words})\b", delegate (Match m)
                                 {
 
                                     return substitutionWords.subwords.words[Regex.Escape(m.Value)].PickRandom();
@@ -248,7 +256,7 @@ namespace TTSBot {
                 }
 
                 // check if substituteregex enabled
-                if (bot.botSettingManager.settings.settingDictionary["substituteRegexEnabled"])
+                if (this.botSettingManager.settings.settingDictionary["substituteRegexEnabled"])
                 {
                     if (substitutionWords.subwords.regularexpressions != null) {
 
@@ -290,10 +298,10 @@ namespace TTSBot {
 
 
 
-        public void CheckForChatCommands(OnMessageReceivedArgs e)
+        public void CheckForChatCommands(ChatData chat_message)
         {
 
-            string[] words = e.ChatMessage.Message.Split(' ');
+            string[] words = chat_message.message.Split(' ');
 
 
             if (words.Length > 0)
@@ -309,35 +317,35 @@ namespace TTSBot {
 
 
                 // Admin + Broadcaster Commands
-                if ((bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
+                if ((this.botSettingManager.settings.botAdminUserName.ToLower() == chat_message.user_name.ToLower()))
                 {
                     foreach (var item in commmandDict){
                         if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.STREAMER)){
-                            item.Key.DynamicInvoke(e);
+                            item.Key.DynamicInvoke(chat_message);
                         }
 
                     }
                 }
 
                 // Admin + Moderator commands 
-                if ((e.ChatMessage.IsModerator) || (bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
+                if ((chat_message.user_level == Commands.UserLevel.MOD) || (this.botSettingManager.settings.botAdminUserName.ToLower() == chat_message.user_name.ToLower()))
                 {
                     foreach (var item in commmandDict){
                     if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.MOD)){
-                        item.Key.DynamicInvoke(e);
+                        item.Key.DynamicInvoke(chat_message);
                     }
 
                 }                   
                 }
 
                 // Admin + VIP commands 
-                if ((e.ChatMessage.IsVip) || (bot.botSettingManager.settings.botAdminUserName.ToLower() == e.ChatMessage.Username.ToLower()))
+                if ((chat_message.user_level == Commands.UserLevel.VIP) || (this.botSettingManager.settings.botAdminUserName.ToLower() == chat_message.user_name.ToLower()))
                 {
                     foreach (var item in commmandDict)
                     {
                         if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.VIP))
                         {
-                            item.Key.DynamicInvoke(e);
+                            item.Key.DynamicInvoke(chat_message);
                         }
 
                     }
@@ -349,7 +357,7 @@ namespace TTSBot {
                 {
                     if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.USER))
                     {
-                        item.Key.DynamicInvoke(e);
+                        item.Key.DynamicInvoke(chat_message);
                     }
 
                 }
@@ -359,9 +367,9 @@ namespace TTSBot {
 
         }
 
-        public bool SetRegex(OnMessageReceivedArgs e){
+        public bool SetRegex(ChatData chat_message){
 
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 2){
                 // typical input in the form of !regex \b8=*D\b|\b8-*D\b wub
                 string pattern = wordList[1];
@@ -370,20 +378,22 @@ namespace TTSBot {
                 substitutionWords.AddRegularExpressionSubPair(pattern, wordToSubstitute);
                 substitutionWords.Save();
 
-                bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} regex pattern will be substituted with {1} in text to speech.", pattern, wordToSubstitute));
+                if (chat_message.origin == "TWITCH")
+                    twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0} regex pattern will be substituted with {1} in text to speech.", pattern, wordToSubstitute));
 
                 return true;
 
             }
 
-            bot.client.SendMessage(e.ChatMessage.Channel, String.Format("Please enter the command in the form : !regex pattern substitute"));
+            if (chat_message.origin == "TWITCH")
+                twitch_bot.client.SendMessage(chat_message.channel, String.Format("Please enter the command in the form : !regex pattern substitute"));
             return false;
 
         }
 
-        public bool RemoveRegex(OnMessageReceivedArgs e){
+        public bool RemoveRegex(ChatData chat_message){
 
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 1){
                 string pattern = wordList[1];
 
@@ -391,26 +401,28 @@ namespace TTSBot {
 
                 if (success){
 
-                bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} pattern has been removed from the word regex substitution list.", pattern));
-                substitutionWords.Save();
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0} pattern has been removed from the word regex substitution list.", pattern));
+                    substitutionWords.Save();
                 return true;
                 }
                 else{
-                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("Could not remove {0} pattern from the regex substitution list.", pattern));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("Could not remove {0} pattern from the regex substitution list.", pattern));
                     return false;
                 }
 
             }
-
-            bot.client.SendMessage(e.ChatMessage.Channel, String.Format("Please enter word to remove in the form of !removeregex word."));
+            if (chat_message.origin == "TWITCH")
+                twitch_bot.client.SendMessage(chat_message.channel, String.Format("Please enter word to remove in the form of !removeregex word."));
             return false;
 
 
         }
         
-        public bool RemoveSubstitute(OnMessageReceivedArgs e){
+        public bool RemoveSubstitute(ChatData chat_message){
 
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 1){
                 string wordToRemove = wordList[1];
 
@@ -418,26 +430,27 @@ namespace TTSBot {
                 bool success = substitutionWords.RemoveWord(wordToRemove);
 
                 if (success){
-
-                bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} has been removed from the word substitution list.", wordToRemove));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0} has been removed from the word substitution list.", wordToRemove));
                 substitutionWords.Save();
                 return true;
                 }
                 else{
-                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("Could not remove {0} from the word substitution list.", wordToRemove));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("Could not remove {0} from the word substitution list.", wordToRemove));
                     return false;
                 }
 
             }
-
-            bot.client.SendMessage(e.ChatMessage.Channel, String.Format("Please enter word to remove in the form of !removesubstitute word."));
+            if (chat_message.origin == "TWITCH")
+                twitch_bot.client.SendMessage(chat_message.channel, String.Format("Please enter word to remove in the form of !removesubstitute word."));
             return false;
 
         }
 
-        public bool SetSubstituteWord(OnMessageReceivedArgs e){
+        public bool SetSubstituteWord(ChatData chat_message){
 
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 2){
                 // typical input in the form of !substitute <3 wub
                 string word = wordList[1];
@@ -448,30 +461,30 @@ namespace TTSBot {
 
                     substitutionWords.AddWordPair(word, wordToSubstitute);
                     substitutionWords.Save();
-
-                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} will be substituted with {1} in text to speech.", word, wordToSubstitute));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0} will be substituted with {1} in text to speech.", word, wordToSubstitute));
 
                     return true;
                 }
 
             }
-
-            bot.client.SendMessage(e.ChatMessage.Channel, String.Format("Please enter the command in the form : !substitute word substitute"));
+            if (chat_message.origin == "TWITCH")
+                twitch_bot.client.SendMessage(chat_message.channel, String.Format("Please enter the command in the form : !substitute word substitute"));
             return false;
 
         }
 
 
-        public bool DisplayBlackList(OnMessageReceivedArgs e){
+        public bool DisplayBlackList(ChatData chat_message){
 
 
             
 
-            List<TwitchUser> ignoredList = new List<TwitchUser>();
+            List<ChatUser> ignoredList = new List<ChatUser>();
 
             // get only users where ignore is true and put into new list
 
-            foreach (TwitchUser user in users.users){
+            foreach (ChatUser user in users.users){
 
                 if (user.ignored == true){
 
@@ -482,7 +495,7 @@ namespace TTSBot {
 
             List<string> names = new List<string>();
 
-            foreach (TwitchUser user in ignoredList){
+            foreach (ChatUser user in ignoredList){
 
                 names.Add(user.name);
 
@@ -490,19 +503,19 @@ namespace TTSBot {
 
             string output = "";
             output = String.Join(",", names);
-
-            bot.client.SendMessage(e.ChatMessage.Channel, String.Format("Ignored Users : {0}.", output));
+            if (chat_message.origin == "TWITCH")
+                twitch_bot.client.SendMessage(chat_message.channel, String.Format("Ignored Users : {0}.", output));
 
             return true;
 
 
         }
 
-        public bool SetVoice(OnMessageReceivedArgs e){
+        public bool SetVoice(ChatData chat_message){
 
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 1)
-            {   
+            {
 
                 int voiceNumber = -1;
                 string voiceNumberString = wordList[1]; 
@@ -510,7 +523,8 @@ namespace TTSBot {
                     voiceNumber = int.Parse(voiceNumberString);
                 }
                 catch{
-                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} is not a vaild voice number.", voiceNumberString));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0} is not a vaild voice number.", voiceNumberString));
                     System.Console.WriteLine("Problem parsing string to int in SetVoice.");
                     return false;
                 }
@@ -520,7 +534,7 @@ namespace TTSBot {
                 ReadOnlyCollection <InstalledVoice> installedVoices  = synth.GetInstalledVoices();
                 if ( 0 <= voiceNumber && voiceNumber <= (installedVoices.Count - 1)){
 
-                    TwitchUser user = new TwitchUser(e.ChatMessage.Username);
+                    ChatUser user = new ChatUser(chat_message.user_name);
                     if (users.IsUserInList(user)){
 
                         user = users.GetUser(user);
@@ -537,8 +551,8 @@ namespace TTSBot {
                         users.AddUser(user);
                         
                     }
-
-                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} has selected voice : {1}", user.name, user.voiceName));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0} has selected voice : {1}", user.name, user.voiceName));
 
                     users.Save();
 
@@ -551,9 +565,9 @@ namespace TTSBot {
 
         }
 
-        public bool SetUserVoice(OnMessageReceivedArgs e){
+        public bool SetUserVoice(ChatData chat_message){
 
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 2)
             {   
 
@@ -564,7 +578,8 @@ namespace TTSBot {
                     voiceNumber = int.Parse(voiceNumberString);
                 }
                 catch{
-                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} is not a vaild voice number.", voiceNumberString));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0} is not a vaild voice number.", voiceNumberString));
                     System.Console.WriteLine("Problem parsing string to int in SetVoice.");
                     return false;
                 }
@@ -574,7 +589,7 @@ namespace TTSBot {
                 ReadOnlyCollection <InstalledVoice> installedVoices  = synth.GetInstalledVoices();
                 if ( 0 <= voiceNumber && voiceNumber <= (installedVoices.Count - 1)){
 
-                    TwitchUser user = new TwitchUser(userName);
+                    ChatUser user = new ChatUser(userName);
                     if (users.IsUserInList(user)){
 
                         user = users.GetUser(user);
@@ -591,23 +606,23 @@ namespace TTSBot {
                         users.AddUser(user);
                         
                     }
-
-                     bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} voice has been set to voice : {1}", user.name, user.voiceName));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0} voice has been set to voice : {1}", user.name, user.voiceName));
 
                     users.Save();
 
                 }
 
             }
-
-            bot.client.SendMessage(e.ChatMessage.Channel, String.Format("Correct useage in the form of !uservoice [UserName] [VoiceNumber]"));
+            if (chat_message.origin == "TWITCH")
+                twitch_bot.client.SendMessage(chat_message.channel, String.Format("Correct useage in the form of !uservoice [UserName] [VoiceNumber]"));
 
             return true;
 
 
         }
 
-        public bool DisplayAvailableVoices(OnMessageReceivedArgs e){
+        public bool DisplayAvailableVoices(ChatData chat_message){
 
             string voices = "";
 
@@ -650,23 +665,23 @@ namespace TTSBot {
                 System.Console.WriteLine("Problem gettings installed voices.");
             }
 
-
-            bot.client.SendMessage(e.ChatMessage.Channel, String.Format("Available Voices : {0}", voices.Substring(0, Math.Min(voices.Length, 500)))); 
+            if (chat_message.origin == "TWITCH")
+                twitch_bot.client.SendMessage(chat_message.channel, String.Format("Available Voices : {0}", voices.Substring(0, Math.Min(voices.Length, 500)))); 
             return true;
         }
 
-        public bool SetIgnoreWord(OnMessageReceivedArgs e){
+        public bool SetIgnoreWord(ChatData chat_message){
 
 
             
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 1)
             {
 
                 ignoredWords.AddWord(wordList[1]);
                 ignoredWords.Save();
-
-                bot.client.SendMessage(e.ChatMessage.Channel, String.Format("messages containing {0} will be ignored.", wordList[1]));  
+                if (chat_message.origin == "TWITCH")
+                    twitch_bot.client.SendMessage(chat_message.channel, String.Format("messages containing {0} will be ignored.", wordList[1]));  
 
             }
 
@@ -675,16 +690,16 @@ namespace TTSBot {
 
         }
 
-        public bool SetUnignoreWord(OnMessageReceivedArgs e){
+        public bool SetUnignoreWord(ChatData chat_message){
 
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 1)
             {
 
                 ignoredWords.RemoveWord(wordList[1]);
                 ignoredWords.Save();
-
-                bot.client.SendMessage(e.ChatMessage.Channel, String.Format("messages containing {0} will not be ignored.", wordList[1]));  
+                if (chat_message.origin == "TWITCH")
+                    twitch_bot.client.SendMessage(chat_message.channel, String.Format("messages containing {0} will not be ignored.", wordList[1]));  
 
             }   
 
@@ -693,15 +708,16 @@ namespace TTSBot {
 
         }
 
-        public bool CloseTTS(OnMessageReceivedArgs e)
+        public bool CloseTTS(ChatData chat_message)
         {
 
             System.Console.WriteLine("Closing TTS.");
             try
             {
-                if (bot.botSettingManager.settings.settingDictionary["displayDisconnectionMessage"])
+                if (this.botSettingManager.settings.settingDictionary["displayDisconnectionMessage"])
                 {
-                    bot.client.SendMessage(e.ChatMessage.Channel, "Closing TTS Bot.");
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, "Closing TTS TwitchBot.");
                 }
             }
             catch (Exception ex)
@@ -726,15 +742,15 @@ namespace TTSBot {
 
         }
 
-        public bool SetAlias(OnMessageReceivedArgs e)
+        public bool SetAlias(ChatData chat_message)
         {
 
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 1)
             {
 
                 string alias = Sanitize(String.Join(" ", wordList.Skip(1)));
-                TwitchUser user = new TwitchUser(e.ChatMessage.Username, alias);
+                ChatUser user = new ChatUser(chat_message.user_name, alias);
                 if (user != null)
                 {
 
@@ -752,8 +768,8 @@ namespace TTSBot {
                         users.AddUser(user);
 
                     }
-
-                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0}'s alias has been set to {1}", e.ChatMessage.Username, alias));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0}'s alias has been set to {1}", chat_message.user_name, alias));
 
                     users.Save();
 
@@ -769,14 +785,14 @@ namespace TTSBot {
 
         }
 
-        public bool SetUserAlias(OnMessageReceivedArgs e){
+        public bool SetUserAlias(ChatData chat_message){
 
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 2)
             {
                 string userName = wordList[1];
                 string alias = Sanitize(String.Join(" ", wordList.Skip(2)));
-                TwitchUser user = new TwitchUser(userName, alias);
+                ChatUser user = new ChatUser(userName, alias);
                 if (user != null)
                 {
 
@@ -794,8 +810,8 @@ namespace TTSBot {
                         users.AddUser(user);
 
                     }
-
-                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0}'s alias has been set to {1}", userName, alias));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0}'s alias has been set to {1}", userName, alias));
 
                     users.Save();
 
@@ -805,17 +821,17 @@ namespace TTSBot {
 
 
             }
-
-            bot.client.SendMessage(e.ChatMessage.Channel, String.Format("Correct usage in the form !useralias userName alias"));
+            if (chat_message.origin == "TWITCH")
+                twitch_bot.client.SendMessage(chat_message.channel, String.Format("Correct usage in the form !useralias user_name alias"));
             return false;
         }
 
-        public bool SetIgnore(OnMessageReceivedArgs e)
+        public bool SetIgnore(ChatData chat_message)
         {
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 1)
             {
-                TwitchUser user = new TwitchUser(wordList[1]);
+                ChatUser user = new ChatUser(wordList[1]);
                 if (user != null)
                 {
 
@@ -834,8 +850,8 @@ namespace TTSBot {
                         users.AddUser(user);
 
                     }
-
-                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} will be ignored.", user.name));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0} will be ignored.", user.name));
                     users.Save();
 
                 }
@@ -846,13 +862,13 @@ namespace TTSBot {
 
         }
 
-        public bool SetUnignore(OnMessageReceivedArgs e)
+        public bool SetUnignore(ChatData chat_message)
         {
-            string[] wordList = e.ChatMessage.Message.Split(' ');
+            string[] wordList = chat_message.message.Split(' ');
             if (wordList.Length > 1)
             {
 
-                TwitchUser user = new TwitchUser(wordList[1]);
+                ChatUser user = new ChatUser(wordList[1]);
                 if (user != null)
                 {
 
@@ -868,8 +884,8 @@ namespace TTSBot {
                         user.ignored = false;
                         users.AddUser(user);
                     }
-
-                    bot.client.SendMessage(e.ChatMessage.Channel, String.Format("{0} will not be ignored.", user.name));
+                    if (chat_message.origin == "TWITCH")
+                        twitch_bot.client.SendMessage(chat_message.channel, String.Format("{0} will not be ignored.", user.name));
                     users.Save();
 
                 }

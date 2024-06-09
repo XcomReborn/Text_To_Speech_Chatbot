@@ -30,28 +30,39 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
 
-        public FrontPage frontPage;  
+        public FrontPage frontPage;
+        public CommandsPage commandsPage;
+        public SettingsPage settingsPage;
+        public AboutPage aboutPage;
 
         private LowLevelKeyboardListener _listener;
 
         private bool paused = false;
 
+        private SettingsManager settings_manager;
+
+
         public MainWindow()
         {
+            Console.WriteLine("Hello");
 
-        Bot bot = new Bot();
-        TextToSpeech tts = new TextToSpeech(bot);
-        TTSBotCommands commands = new TTSBotCommands(tts);
+            this.settings_manager = new SettingsManager();
+            Application.Current.Properties["settings_manager"] = settings_manager;
 
-        Application.Current.Properties["bot"] = bot;
-        Application.Current.Properties["tts"] = tts;
-        Application.Current.Properties["commands"] = commands;
+            TextToSpeech tts = new TextToSpeech();
+            Application.Current.Properties["tts"] = tts;
 
-        InitializeComponent();
+            CommandsManager commands = new CommandsManager(tts);
+            Application.Current.Properties["commands"] = commands;
 
-        frontPage = new FrontPage();
+            InitializeComponent();
 
-        MainFrame.Content = frontPage;
+            frontPage = new FrontPage(settings_manager);
+            commandsPage = new CommandsPage();
+            settingsPage = new SettingsPage(settings_manager);
+            aboutPage = new AboutPage();
+
+            MainFrame.Content = frontPage;
 
         }
 
@@ -64,26 +75,24 @@ namespace WpfApp1
             _listener = new LowLevelKeyboardListener();
             _listener.OnKeyDown += _listener_OnKeyDown;
             _listener.OnKeyUp += _listener_OnKeyUp;
-
             _listener.HookKeyboard();
         }
 
         void _listener_OnKeyUp(object sender, KeyPressedArgs e)
         {
-            TwitchTTSBotSettingsManager botSettingManager = ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager;
-            if (e.KeyPressed == (Key)botSettingManager.settings.skipKey)
+            //SettingsManager? settings_manager = Application.Current.Properties["SettingsManager"] as SettingsManager;
+            if (e.KeyPressed == (Key)this.settings_manager.settings.skipKey)
             {
                     frontPage.skipIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
                     frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
                     ResumeSpeech();
 
             }
-            if (e.KeyPressed == (Key)botSettingManager.settings.skipAllKey)
+            if (e.KeyPressed == (Key)settings_manager.settings.skipAllKey)
             {
                     frontPage.skipAllIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
                     frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
-                ResumeSpeech();
-
+                    ResumeSpeech();
 
             }
 
@@ -105,9 +114,8 @@ namespace WpfApp1
 
         void _listener_OnKeyDown(object sender, KeyPressedArgs e)
         {
-            TwitchTTSBotSettingsManager botSettingManager = ((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager;
 
-            if (e.KeyPressed == (Key)botSettingManager.settings.pauseKey)
+            if (e.KeyPressed == (Key)settings_manager.settings.pauseKey)
             {
                 // toggle paused
                 paused = !paused;
@@ -140,7 +148,7 @@ namespace WpfApp1
                     }
                 }
             }
-            if (e.KeyPressed == (Key)botSettingManager.settings.skipKey)
+            if (e.KeyPressed == (Key)settings_manager.settings.skipKey)
             {
                 try
                 {
@@ -159,7 +167,7 @@ namespace WpfApp1
 
 
             }
-            if (e.KeyPressed == (Key)botSettingManager.settings.skipAllKey)
+            if (e.KeyPressed == (Key)settings_manager.settings.skipAllKey)
             {
                 // add skip all messages logic
                 //
@@ -167,7 +175,7 @@ namespace WpfApp1
                 {
                     // requires resume before disposal or will not speak on new object
                     ResumeSpeech();
-                    ((TextToSpeech)Application.Current.Properties["tts"]).bot.messageBuffer.Clear();
+                    ((TextToSpeech)Application.Current.Properties["tts"]).messageBuffer.Clear();
                     ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
                     ((TextToSpeech)Application.Current.Properties["tts"]).synth = new System.Speech.Synthesis.SpeechSynthesizer();
                     frontPage.skipAllIndicator.Fill = new SolidColorBrush(Colors.Red);
@@ -181,26 +189,9 @@ namespace WpfApp1
             }
         }
 
-
-
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ClickingTextToSpeechText(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
-
-        private void SettingsText(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
-
         private void MouseDownOnCommandsText(object sender, MouseButtonEventArgs e)
         {
-            MainFrame.Content = new CommandsPage();
+            MainFrame.Content = commandsPage;
         }
 
         private void MouseDownOnTextToSpeechText(object sender, MouseButtonEventArgs e)
@@ -210,8 +201,13 @@ namespace WpfApp1
 
         private void MouseDownOnSettingsText(object sender, MouseButtonEventArgs e)
         {
-            MainFrame.Content = new SettingsPage();
+            MainFrame.Content = settingsPage;
 
+        }
+
+        private void MouseDownOnAboutText(object sender, MouseButtonEventArgs e)
+        {
+            MainFrame.Content = aboutPage;
         }
 
         void Window_Closing(object sender, CancelEventArgs e)
@@ -219,9 +215,10 @@ namespace WpfApp1
             // cleanup thread
             try
             {
-                if (((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.settings.settingDictionary["displayDisconnectionMessage"])
+
+                if (settings_manager.settings.settingDictionary["displayDisconnectionMessage"])
                 {
-                    ((TextToSpeech)Application.Current.Properties["tts"]).bot.client.SendMessage(((TextToSpeech)Application.Current.Properties["tts"]).bot.botSettingManager.settings.defaultJoinChannel, "Closing TTS Bot.");
+                    ((TextToSpeech)Application.Current.Properties["tts"]).twitch_bot.client.SendMessage(settings_manager.settings.defaultJoinChannel, "Closing TTS TwitchBot.");
                 }
             }
             catch (Exception ex)
@@ -255,9 +252,16 @@ namespace WpfApp1
             }
         }
 
-        private void MouseDownOnAboutText(object sender, MouseButtonEventArgs e)
+
+
+        private void Menu_MouseEnter(object sender, MouseEventArgs e)
         {
-            MainFrame.Content = new AboutPage();
+            ((TextBlock)sender).Foreground = Brushes.Red;
+        }
+
+        private void Menu_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ((TextBlock)sender).Foreground = Brushes.White;
         }
     }
 

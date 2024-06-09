@@ -5,30 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="Twitch Chat Text To Speech" Height="450" Width="1000"
+        Title="Twitch Chat Text To Speech" Height="600" Width="1000"
         WindowStyle= "SingleBorderWindow"
         ResizeMode="CanResizeWithGrip"
         Background="#FFF"
         Closing="Window_Closing"
-        Loaded="Window_Loaded"
+        Loaded="Window_Loaded" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
         >
 
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height ="25" />
-
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height ="50" />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-
-            <ColumnDefinition/>
-
-        </Grid.ColumnDefinitions>
-
         <Grid Background = "#0F0F2D" 
-              Grid.ColumnSpan="2">
+              Grid.ColumnSpan="4" Margin="0,0,2,0">
 
             <Grid.ColumnDefinitions>
 
@@ -39,55 +32,68 @@
                 <ColumnDefinition Width="133*"/>
                 <ColumnDefinition Width="30*"/>
 
-
-
             </Grid.ColumnDefinitions>
 
 
-            <TextBlock x:Name="TextToSpeech" Text="Text To Speech"  
+            <TextBlock x:Name="TextToSpeech" 
+                       Text="Home"
+                       FontSize="20"
                        Foreground="White" 
                        Grid.Column="1" 
                        VerticalAlignment="Center" 
                        HorizontalAlignment="Center"
                        FontFamily="Fonts/#Dosis"
-                       FontWeight="Medium" MouseDown="MouseDownOnTextToSpeechText" />
-
+                       FontWeight="Medium"
+                       MouseEnter="Menu_MouseEnter"
+                       MouseLeave="Menu_MouseLeave"
+                       MouseDown="MouseDownOnTextToSpeechText" />
 
             <TextBlock  x:Name="Commands"
-                        Text="Commands"  
-                       Foreground="LightGray" 
+                        Text="Commands"
+                        FontSize="20"
+                       Foreground="White" 
                        Grid.Column="2" 
                        VerticalAlignment="Center" 
                        HorizontalAlignment="Center"
-                       FontFamily="Fonts/#Dosis" MouseDown="MouseDownOnCommandsText" />
+                       FontFamily="Fonts/#Dosis" 
+                        MouseEnter="Menu_MouseEnter"
+                        MouseLeave="Menu_MouseLeave"
+                        MouseDown="MouseDownOnCommandsText" />
 
 
             <TextBlock  x:Name="Settings"
-                        Text="Settings"  
-                       Foreground="LightGray" 
+                        Text="Settings"
+                        FontSize="20"
+                       Foreground="White" 
                        Grid.Column="3" 
                        VerticalAlignment="Center" 
                        HorizontalAlignment="Center"
-                       FontFamily="Fonts/#Dosis" MouseDown="MouseDownOnSettingsText" />
+                       FontFamily="Fonts/#Dosis" 
+                        MouseEnter="Menu_MouseEnter"
+                        MouseLeave="Menu_MouseLeave"
+                        MouseDown="MouseDownOnSettingsText" />
 
             <TextBlock  x:Name="About"
-                        Text="About"  
-                       Foreground="LightGray" 
+                        Text="About"
+                        FontSize="20"
+                       Foreground="White" 
                        Grid.Column="4" 
                        VerticalAlignment="Center" 
                        HorizontalAlignment="Center"
-                       FontFamily="Fonts/#Dosis" MouseDown="MouseDownOnAboutText" />
+                       FontFamily="Fonts/#Dosis" 
+                        MouseEnter="Menu_MouseEnter"
+                        MouseLeave="Menu_MouseLeave"
+                        MouseDown="MouseDownOnAboutText" />
 
 
         </Grid>
 
-        <StackPanel Grid.Row="1"/>
-
         <Frame x:Name="MainFrame" 
                Grid.Row="1"     
-               ScrollViewer.VerticalScrollBarVisibility="Visible" 
+               ScrollViewer.VerticalScrollBarVisibility="Auto" 
+               ScrollViewer.HorizontalScrollBarVisibility="Auto"
                ScrollViewer.CanContentScroll="True"  
-               NavigationUIVisibility="Hidden"/>
+               NavigationUIVisibility="Hidden"   />
     </Grid>
 
 

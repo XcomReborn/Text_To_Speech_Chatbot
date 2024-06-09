@@ -4,17 +4,17 @@ using System.IO;
 using System.Windows.Input;
 using System.Collections.Generic;
 
-[System.Serializable]
+namespace TTSBot;
 
-class TwitchTTSBotSettingsManager
+[System.Serializable]
+public class SettingsManager
 {
 
-
-    public TwitchTTSBotSettings settings = new TwitchTTSBotSettings();
+    public Settings settings = new Settings();
 
     public string userSettingsPath =  AppDomain.CurrentDomain.BaseDirectory + "/data/userSettings.json";
 
-    public TwitchTTSBotSettingsManager()
+    public SettingsManager()
     {
 
         // attempt to load settings if fails use defaults
@@ -41,8 +41,11 @@ class TwitchTTSBotSettingsManager
                 string str = sr.ReadToEnd();
                 if (str != null)
                 {
-                    TwitchTTSBotSettings? settings = JsonConvert.DeserializeObject<TwitchTTSBotSettings>(str);
-                    this.settings = settings;
+                    Settings? settings = JsonConvert.DeserializeObject<Settings>(str);
+                    if (settings != null)
+                    {
+                        this.settings = settings;
+                    }
                 }
                 sr.Close();
                 fs.Close();
@@ -98,46 +101,5 @@ class TwitchTTSBotSettingsManager
 
     }
 
-
-}
-
-[System.Serializable]
-class TwitchTTSBotSettings
-{
-
-    public string botName = "COHopponentBot"; // the bots chat userName
-    public string botOAuthKey = "oauth:6lwp9xs2oye948hx2hpv5hilldl68g"; // the key you want to use for connection to the twitch server
-    public string defaultJoinChannel = "xcomreborn"; // typically the broadcasters twitch channel
-    public string botAdminUserName = "xcomreborn"; // incase you want to use the bot on someone elses channel only you will hear the tts.
-    // Stores whose text messages the bot will speak.
-    public string saidString = "said";
-
-    public Dictionary<string, bool> settingDictionary = new Dictionary<string, bool>
-    {
-        {"broadcasterSpeaks" , true },
-        {"modSpeaks" , true },
-        {"vipSpeaks" , true },
-        {"userSpeaks" , true },
-        {"subscriberSpeaks" , true },
-        {"substituteEnabled" , true },
-        {"substituteRegexEnabled" , true },
-        {"displayConnectionMessage" , true },
-        {"displayDisconnectionMessage" , true },
-        {"speakUserNameEnabled" , true },
-
-    };
-
-    //Volume
-    public int volume = 100;
-
-    //Keys for speech message stack manipulation
-    public int pauseKey = ((int)Key.Add);
-    public int skipKey = ((int)Key.Multiply);
-    public int skipAllKey = ((int)Key.Divide);
-
-    public override string ToString()
-    {
-        return "Object Contains TTS Bot Settings";
-    }
 
 }

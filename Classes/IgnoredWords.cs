@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 
-class IgnoredWords
+
+namespace TTSBot;
+public class IgnoredWords
 {
     
     private HashSet<string> words = new HashSet<string>();

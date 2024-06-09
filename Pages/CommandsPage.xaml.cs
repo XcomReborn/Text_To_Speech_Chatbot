@@ -30,10 +30,8 @@ namespace WpfApp1.Pages
         {
             InitializeComponent();
 
-            
 
-
-            TTSBotCommands commands = (TTSBotCommands)Application.Current.Properties["commands"];
+            CommandsManager commands = (CommandsManager)Application.Current.Properties["commands"];
             int i = 0;
             foreach (var item in commands.commands)
             {
@@ -53,7 +51,6 @@ namespace WpfApp1.Pages
 
                 RowDefinition enabledRow = new RowDefinition();
                 enabledColumn.RowDefinitions.Add(enabledRow);
-
 
                 // Commands
                 MyTextBox myTextBox = new MyTextBox();
@@ -144,7 +141,7 @@ namespace WpfApp1.Pages
         private void PrivilegeLevelChanged(object sender, SelectionChangedEventArgs e)
         {
             try {
-                TTSBotCommands commands = (TTSBotCommands)Application.Current.Properties["commands"];
+                CommandsManager commands = (CommandsManager)Application.Current.Properties["commands"];
                 foreach (var item in commands.commands)
                 {
                     if (((MyComboBox)sender).name == item.Value.name)
@@ -168,7 +165,7 @@ namespace WpfApp1.Pages
             try
             {
                 Debug.WriteLine("Checkbox Toggled");
-                TTSBotCommands commands = (TTSBotCommands)Application.Current.Properties["commands"];
+                CommandsManager commands = (CommandsManager)Application.Current.Properties["commands"];
                 foreach (var item in commands.commands)
                 {
                     if (((MyCheckBox)sender).name == item.Value.name)
@@ -191,7 +188,7 @@ namespace WpfApp1.Pages
             try
             {
                 Debug.WriteLine("TextBox Changed");
-                TTSBotCommands commands = (TTSBotCommands)Application.Current.Properties["commands"];
+                CommandsManager commands = (CommandsManager)Application.Current.Properties["commands"];
                 foreach (var item in commands.commands)
                 {
                     if (((MyTextBox)sender).name == item.Value.name)

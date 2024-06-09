@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Windows;
 using TwitchLib.Client;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Events;
@@ -13,27 +13,31 @@ using TwitchLib.Communication.Models;
 namespace TTSBot
 {
     
-    class Bot
+    public class TwitchBot
     {
 
-        public TwitchClient client = null;
-        public TwitchTTSBotSettingsManager botSettingManager = new TwitchTTSBotSettingsManager();
+        public TwitchLib.Client.TwitchClient client;
+        private SettingsManager? botSettingManager;
         // Buffer containing all messages to be processed externally.
-        public Queue<OnMessageReceivedArgs> messageBuffer = new Queue<OnMessageReceivedArgs>();
+        private TextToSpeech text_to_speech;
 
         private ConnectionCredentials credentials;
 
-        public Bot()
+        public TwitchBot(TextToSpeech textToSpeech)
         {
 
-            credentials = new ConnectionCredentials(botSettingManager.settings.botName, botSettingManager.settings.botOAuthKey);
+            this.text_to_speech = textToSpeech;
+            this.botSettingManager = Application.Current.Properties["settings_manager"] as SettingsManager;
+                        
+            credentials = new ConnectionCredentials(botSettingManager.settings.botName, botSettingManager.settings.BotOAuthKey);
             var clientOptions = new ClientOptions
             {
                 MessagesAllowedInPeriod = 750,
                 ThrottlingPeriod = TimeSpan.FromSeconds(30)
             };
             WebSocketClient customClient = new WebSocketClient(clientOptions);
-            client = new TwitchClient(customClient);
+            client = new TwitchLib.Client.TwitchClient(customClient);
+            
 
         }
 
@@ -46,7 +50,7 @@ namespace TTSBot
                 ThrottlingPeriod = TimeSpan.FromSeconds(30)
             };
             WebSocketClient customClient = new WebSocketClient(clientOptions);
-            client = new TwitchClient(customClient);
+            client = new TwitchLib.Client.TwitchClient(customClient);
 
 
             client.Initialize(credentials, botSettingManager.settings.defaultJoinChannel);
@@ -54,8 +58,8 @@ namespace TTSBot
             client.OnLog += Client_OnLog;
             client.OnJoinedChannel += Client_OnJoinedChannel;
             client.OnMessageReceived += Client_OnMessageReceived;
-            client.OnWhisperReceived += Client_OnWhisperReceived;
-            client.OnNewSubscriber += Client_OnNewSubscriber;
+            //client.OnWhisperReceived += Client_OnWhisperReceived;
+            //client.OnNewSubscriber += Client_OnNewSubscriber;
             client.OnConnected += Client_OnConnected;
 
             return client.Connect();
@@ -87,9 +91,11 @@ namespace TTSBot
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
 
-            messageBuffer.Enqueue(e);
+            ChatData chat_message = new ChatData(e);
+            text_to_speech.messageBuffer.Enqueue(chat_message);
 
         }
+
 
         private void Client_OnWhisperReceived(object sender, OnWhisperReceivedArgs e)
         {
