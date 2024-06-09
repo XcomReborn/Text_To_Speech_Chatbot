@@ -21,8 +21,8 @@ public class Settings
         [JsonPropertyAttribute] private string botOAuthKey = Encrypt(oAuthKey, passphrase); // stored in file as simple encrypted string.
         public string defaultJoinChannel = "xereborn"; // typically the broadcasters twitch channel
         public string botAdminUserName = "xereborn"; // incase you want to use the bot on someone elses channel only you will hear the tts.
-        public string kickChannelUserName = "xereborn";    
-        public string kickChannelAdminUserName = "xereborn";
+        public string kickChannelUserName = "Xcom-Reborn";    
+        public string kickChannelAdminUserName = "Xcom-Reborn";
         [JsonPropertyAttribute] private string kickPassword = "";// stored in file as simple encrypted string.
         [JsonPropertyAttribute] private string kick2FAToken = "";// stored in file as simple encrypted string.
 

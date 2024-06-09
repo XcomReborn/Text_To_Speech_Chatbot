@@ -7,6 +7,8 @@ using KickLib.Client;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
+using KickLib.Models;
+using System.Net.Mail;
 
 
 
@@ -16,7 +18,7 @@ namespace TTSBot
     public class KickBot{
 
 
-        private IKickApi kickApi = new KickApi();
+        public IKickApi kickApi = new KickApi();
         private SettingsManager? botSettingManager;
         public string userName = "xereborn";
         public Queue<ChatMessageEventArgs> messageBuffer = new Queue<ChatMessageEventArgs>();
@@ -32,11 +34,16 @@ namespace TTSBot
         {
             var channelInfo = await this.kickApi.Channels.GetChannelInfoAsync(this.botSettingManager.settings.kickChannelUserName);
 
-            Console.WriteLine(channelInfo.Chatroom.Id);
-
             IKickClient client = new KickClient();
 
             client.OnMessage += Client_OnMessageReceived;
+
+            var authSettings = new AuthenticationSettings(botSettingManager.settings.kickChannelUserName, botSettingManager.settings.KickPassword)
+            {
+                TwoFactorAuthCode = botSettingManager.settings.Kick2FAToken
+            };
+
+            await kickApi.AuthenticateAsync(authSettings);
 
             await client.ListenToChatRoomAsync(channelInfo.Chatroom.Id);
 
@@ -45,6 +52,20 @@ namespace TTSBot
 
 
         }
+
+        public async void SendMessage(string channelid, string message) {
+
+            try
+            {
+                var id = int.Parse(channelid);
+                await kickApi.Messages.SendMessageAsync(id, message);
+            }
+            catch {
+                return;
+            }
+
+        }
+
 
         private void Client_OnMessageReceived(object sender, ChatMessageEventArgs e)
         {

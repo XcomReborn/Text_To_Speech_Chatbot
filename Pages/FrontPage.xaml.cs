@@ -17,6 +17,7 @@ using System.Diagnostics;
 using TTSBot;
 using System.Windows.Controls.Primitives;
 using System.Configuration;
+using KickLib;
 
 namespace WpfApp1.Pages
 {
@@ -132,10 +133,16 @@ namespace WpfApp1.Pages
 
         }
 
-        private void OnClickConnectButtonKick(object sender, RoutedEventArgs e)
+        private async void OnClickConnectButtonKick(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("Button Pressed.");
-            Debug.WriteLine(settingsManager.settings.BotOAuthKey);
+            Debug.WriteLine(settingsManager.settings.kickChannelUserName);
+            Debug.WriteLine(settingsManager.settings.KickPassword);
+            Debug.WriteLine(settingsManager.settings.Kick2FAToken);
+
+
+            await ((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.kickApi.Messages.SendMessageAsync(12267684, "This is a test message.");
+
         }
 
         private void volumeSliderLoaded(object sender, RoutedEventArgs e)
