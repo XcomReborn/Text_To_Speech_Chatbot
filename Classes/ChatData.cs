@@ -1,10 +1,12 @@
 ﻿using KickLib.Client.Models.Args;
+using KickLib.Client.Models.Events.Chatroom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TTSBot;
+using TwitchLib.Api.Core.Models.Undocumented.Comments;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 
@@ -57,6 +59,24 @@ public class ChatData
         this.is_subscriber = false;
         // need to look at badges for this
         this.user_level = Commands.UserLevel.USER;
+        ICollection<Badge> badges = e.Data.Sender.Identity.Badges;
+        foreach (Badge badge in badges) { 
+        
+        if (badge.Type.ToLower() == "broadcaster")
+            {
+                this.user_level = Commands.UserLevel.STREAMER;
+            }
+        if (badge.Type.ToLower() == "moderator")
+            {
+                this.user_level = Commands.UserLevel.MOD;
+            }
+        if (badge.Type.ToLower() == "vip")
+            {
+                this.user_level = Commands.UserLevel.VIP;
+            }
+
+        }
+
 
     }
 
