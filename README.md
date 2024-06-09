@@ -2,6 +2,9 @@
 
  A twitch bot to provide text to speech on Windows configurable using a GUI created using WPF.
 
+ ![Example11](https://github.com/XcomReborn/Text_To_Speech_Chatbot/assets/4015491/abbee14d-f462-4276-9752-8671d15de811)
+
+
 ## User Instructions for Windows:
 
 Download executable file here : https://github.com/XcomReborn/CSharpTwitchTTSBotGUI/releases
