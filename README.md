@@ -1,4 +1,4 @@
-# CSharpTwitchTTSBotGUI
+# Text to speech chatbot
 
  A chatbot bot to provide text to speech on Windows configurable with a graphical user interface created using WPF.
 
