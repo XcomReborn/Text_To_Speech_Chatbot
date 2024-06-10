@@ -25,7 +25,7 @@
         <StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="350">
             <TextBlock 
             Text="This Application was created by XcomReborn (2022) and is freely available 
-to anyone who wants to use it. The program is intended to provide text to speech directly from any twitch chat channel and the text is processed locally by the Windows internal text to speech engine." 
+to anyone who wants to use it. The program is intended to provide text to speech directly from any twitch or kick chat channel and the text is processed locally by the Windows internal text to speech engine." 
                    TextWrapping="Wrap" 
                    Foreground="Red"
                    />
@@ -36,20 +36,20 @@ to anyone who wants to use it. The program is intended to provide text to speech
 
             <TextBlock>
             <Hyperlink 
-                            NavigateUri="https://github.com/XcomReborn/CSharpTwitchTTSBotGUI"
+                            NavigateUri="https://github.com/XcomReborn/Text_To_Speech_Chatbot"
                             RequestNavigate="Hyperlink_RequestNavigate">
-                https://github.com/XcomReborn/CSharpTwitchTTSBotGUI
+                https://github.com/XcomReborn/Text_To_Speech_Chatbot
             </Hyperlink>
             </TextBlock>
 
-            <TextBlock Text="Special thanks to the subscribers of my twitch channel. If you like this program any subscription or donation would be greatly appreciated:" 
+            <TextBlock Text="If you like this program any subscription or donation would be greatly appreciated:" 
                    TextWrapping="Wrap" 
                    Margin="0 10 0 0"
                    Foreground="Red"
                    />
             <TextBlock>
-            <Hyperlink NavigateUri="https://www.twitch.tv/xcomreborn" RequestNavigate="Hyperlink_RequestNavigate">
-                https://www.twitch.tv/xcomreborn
+            <Hyperlink NavigateUri="https://www.x.com/xcomreborn" RequestNavigate="Hyperlink_RequestNavigate">
+                https://www.x.com/xcomreborn
             </Hyperlink>
             </TextBlock>
 
