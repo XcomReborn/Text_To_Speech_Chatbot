@@ -1,12 +1,15 @@
-﻿<Page x:Class="WpfApp1.Pages.AboutPage"
+﻿<Page
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfApp1.Pages"
+      xmlns:WpfApp1="clr-namespace:WpfApp1" x:Class="WpfApp1.Pages.AboutPage"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AboutPage">
+      Title="AboutPage"
+      Background="white"
+    >
 
     <Grid RenderTransformOrigin="0.5,0.5" 
           ScrollViewer.HorizontalScrollBarVisibility="Auto" 
@@ -24,8 +27,7 @@
 
         <StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="350">
             <TextBlock 
-            Text="This Application was created by XcomReborn (2022) and is freely available 
-to anyone who wants to use it. The program is intended to provide text to speech directly from any twitch or kick chat channel and the text is processed locally by the Windows internal text to speech engine." 
+            Text="This Application was created by XcomReborn (2022) and is freely available  to anyone who wants to use it. The program is intended to provide text to speech directly from any twitch or kick chat channel and the text is processed locally by the Windows internal text to speech engine." 
                    TextWrapping="Wrap" 
                    Foreground="Red"
                    />
@@ -34,26 +36,27 @@ to anyone who wants to use it. The program is intended to provide text to speech
                    Foreground="Blue"
                    />
 
-            <TextBlock>
-            <Hyperlink 
+            <TextBlock><Hyperlink 
                             NavigateUri="https://github.com/XcomReborn/Text_To_Speech_Chatbot"
-                            RequestNavigate="Hyperlink_RequestNavigate">
-                https://github.com/XcomReborn/Text_To_Speech_Chatbot
-            </Hyperlink>
-            </TextBlock>
+                            RequestNavigate="Hyperlink_RequestNavigate"><Run Text="https://github.com/XcomReborn/Text_To_Speech_Chatbot"/></Hyperlink></TextBlock>
 
             <TextBlock Text="If you like this program any subscription or donation would be greatly appreciated:" 
                    TextWrapping="Wrap" 
                    Margin="0 10 0 0"
                    Foreground="Red"
                    />
-            <TextBlock>
-            <Hyperlink NavigateUri="https://www.x.com/xcomreborn" RequestNavigate="Hyperlink_RequestNavigate">
-                https://www.x.com/xcomreborn
-            </Hyperlink>
-            </TextBlock>
+            <TextBlock><Hyperlink NavigateUri="https://www.x.com/xcomreborn" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="https://www.x.com/xcomreborn"/></Hyperlink></TextBlock>
 
         </StackPanel>
+        <TextBlock 
+            Grid.Column="2" 
+            Margin="35,0,0,0" 
+            Grid.Row="2" 
+            TextWrapping="Wrap"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            >
+            <Run Text="Version v1.1"/><LineBreak/><Run Text="JUN - 2024"/></TextBlock>
 
 
     </Grid>
