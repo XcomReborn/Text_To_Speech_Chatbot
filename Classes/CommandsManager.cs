@@ -13,7 +13,7 @@ public class CommandsManager{
 
     public Dictionary<Delegate, Commands> commands = new Dictionary<Delegate, Commands>();
 
-    public string commandFilePath = AppDomain.CurrentDomain.BaseDirectory + "/data/commandFile.json";
+    public string commandFilePath = Directory.GetCurrentDirectory() + "\\data\\commandFile.json";
 
 
     public CommandsManager(TextToSpeech tts){

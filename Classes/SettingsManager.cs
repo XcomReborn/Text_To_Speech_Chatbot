@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Windows.Input;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace TTSBot;
 
@@ -12,7 +13,8 @@ public class SettingsManager
 
     public Settings settings = new Settings();
 
-    public string userSettingsPath =  AppDomain.CurrentDomain.BaseDirectory + "/data/userSettings.json";
+    public string userSettingsPath = Directory.GetCurrentDirectory() + "\\data\\userSettings.json";
+
 
     public SettingsManager()
     {

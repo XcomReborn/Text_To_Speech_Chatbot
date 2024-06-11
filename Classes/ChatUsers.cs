@@ -11,7 +11,7 @@ public class ChatUsers
 
     public List<ChatUser> users { get; set; } = new List<ChatUser>();
 
-    public string dataPath = AppDomain.CurrentDomain.BaseDirectory + "/data/twitchUserData.json";
+    public string dataPath = Directory.GetCurrentDirectory() + "\\data\\twitchUserData.json";
 
     public ChatUsers()
     {
