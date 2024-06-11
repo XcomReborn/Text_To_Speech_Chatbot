@@ -24,7 +24,7 @@ namespace TTSBot
         public IKickApi kickApi = new KickApi();
         private SettingsManager? botSettingManager;
         public string userName = "xereborn";
-        public Queue<ChatMessageEventArgs> messageBuffer = new Queue<ChatMessageEventArgs>();
+        public Queue<ChatData> messageBuffer = new Queue<ChatData>();
         public TextToSpeech text_to_speech;
         public IKickClient client = new KickClient();
         private ChannelResponse? channelInfo;
@@ -61,6 +61,7 @@ namespace TTSBot
             {
                 var id = int.Parse(channelid);
                 await kickApi.Messages.SendMessageAsync(id, message);
+
             }
             catch {
                 return;
@@ -72,8 +73,11 @@ namespace TTSBot
         private void Client_OnMessageReceived(object sender, ChatMessageEventArgs e)
         {
 
-            Console.WriteLine(e.Data.Content);
             ChatData chat_data = new ChatData(e);
+
+            Debug.WriteLine("Client_OnMessageReceived");
+
+            //text_to_speech.ProcessChatMessage(chat_data);
             text_to_speech.messageBuffer.Enqueue(chat_data);
 
         }

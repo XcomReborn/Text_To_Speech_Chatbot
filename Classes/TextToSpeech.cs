@@ -27,6 +27,7 @@ namespace TTSBot {
     public class TextToSpeech {
 
         public TwitchBot? twitch_bot;
+
         public KickBot? kick_bot;
 
         private ChatUsers users = new ChatUsers();
@@ -63,10 +64,11 @@ namespace TTSBot {
 
             cts = new CancellationTokenSource();
 
+            run();
         }
 
-
-        public void run() {
+        public void run()
+        {
 
 
             cts.Dispose();
@@ -101,14 +103,27 @@ namespace TTSBot {
 
                     }
 
+                    Thread.Sleep(100);
+
                 }
 
                 Debug.WriteLine("Exiting MainLoop on message buffer thread.");
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
-
                 // Thread Abort Exception will throw here.
             }
+        }
+
+        public void ProcessChatMessage(ChatData chatData)
+        {
+
+
+
+            CheckForChatCommands(chatData);
+            // Send to speech
+            Speak(chatData);
+
         }
 
         public void Speak(ChatData chatData)
@@ -187,7 +202,7 @@ namespace TTSBot {
 
                             }
                             // Initialize a new instance of the SpeechSynthesizer.  
-                            synth = new SpeechSynthesizer();
+                            //synth = new SpeechSynthesizer();
 
 
 

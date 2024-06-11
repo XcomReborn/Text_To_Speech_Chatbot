@@ -16,6 +16,14 @@ Use the program graphical user interface and navigate to Settings:
 Set the connection channel and admin name to your twitch name then press the connect button.
 
 
+## Instructions for connecting to kick
+
+This program uses the KickLib library provide here https://github.com/Bukk94/KickLib
+
+Inorder to connect and send messages to kick.com chat an account with two factor authentication (2FA) is required.
+Please follow the instructions laid out on the KickLib page to get hold of your authentication code which is needed
+along with a valid user name and password.
+
 ## Bot Commands. - All commands can be set by the user and enabled/disabled in the commands menu.
 
 ### default Bot commands for Streamer/AdminUserName:
@@ -55,7 +63,9 @@ Please read the README!.txt file first here: https://github.com/XcomReborn/CShar
 
 ## Compilation Instructions.
  
- A simple bot that uses the twitchlib library and System.Speech.Synthesis windows SAPI5 to speak text written in twitch IRC Chat.  
+ A simple bot that uses the twitchlib library and System.Speech.Synthesis windows SAPI5 to speak text written in twitch IRC Chat. 
+ 
+ The current version targets net8.0-windows
 
  Dependancies:
 
@@ -75,18 +85,17 @@ In Command Pallet (Ctrl+Shift+P)
 open NuGet Gallery
 search for and install TwitchLib 3.3.0
 search for and install System.Speech 6.0.0
-search for and install NewtonSoft.Json 13.0.1
+search for and install KickLib 0.1.8
 
 If using Visual Studio 2022.
 
 Install Packages using: Tools -> NuGet Package Manager -> Manage NuGet Packages For Solution...
 search for and install TwitchLib 3.3.0
 search for and install System.Speech 6.0.0
-search for and install NewtonSoft.Json 13.0.1
-
+search for and install KickLib 0.1.8
 
 <OutputType> WinExe
-<TargetFramework> net6.0-windows
+<TargetFramework> net8.0-windows
 <UseWPF> true
 
 

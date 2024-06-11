@@ -21,6 +21,7 @@ using System.ComponentModel; // CancelEventArgs
 using System.Windows; // window
 
 using DesktopWPFAppLowLevelKeyboardHook;
+using System.Security.Cryptography.X509Certificates;
 
 namespace WpfApp1
 {
@@ -41,6 +42,8 @@ namespace WpfApp1
 
         private SettingsManager settings_manager;
 
+        public TextToSpeech tts;
+
 
         public MainWindow()
         {
@@ -49,7 +52,7 @@ namespace WpfApp1
             this.settings_manager = new SettingsManager();
             Application.Current.Properties["settings_manager"] = settings_manager;
 
-            TextToSpeech tts = new TextToSpeech();
+            tts = new TextToSpeech();
             Application.Current.Properties["tts"] = tts;
 
             CommandsManager commands = new CommandsManager(tts);
@@ -65,8 +68,6 @@ namespace WpfApp1
             aboutPage = new AboutPage();
 
             MainFrame.Content = frontPage;
-
-            tts.run();
 
         }
 
@@ -84,36 +85,19 @@ namespace WpfApp1
 
         void _listener_OnKeyUp(object sender, KeyPressedArgs e)
         {
-            //SettingsManager? settings_manager = Application.Current.Properties["SettingsManager"] as SettingsManager;
+
             if (e.KeyPressed == (Key)this.settings_manager.settings.skipKey)
             {
                     frontPage.skipIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
-                    frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
-                    ResumeSpeech();
 
             }
             if (e.KeyPressed == (Key)settings_manager.settings.skipAllKey)
             {
                     frontPage.skipAllIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
-                    frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
-                    ResumeSpeech();
 
             }
 
 
-        }
-
-        private void ResumeSpeech()
-        {
-            try
-            {
-                paused = false;
-                ((TextToSpeech)Application.Current.Properties["tts"]).synth.Resume();
-            }
-            catch (Exception ex)    
-            {
-                Debug.WriteLine(ex.ToString());
-            }
         }
 
         void _listener_OnKeyDown(object sender, KeyPressedArgs e)
@@ -121,17 +105,15 @@ namespace WpfApp1
 
             if (e.KeyPressed == (Key)settings_manager.settings.pauseKey)
             {
-                // toggle paused
-                paused = !paused;
 
 
-
-                if (paused)
+                if (tts.synth.State == System.Speech.Synthesis.SynthesizerState.Paused)
                 {
                     try
                     {
-                        ((TextToSpeech)Application.Current.Properties["tts"]).synth.Pause();
-                        frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.Red);
+
+                        tts.synth.Resume();
+                        frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
                     }
                     catch (Exception ex)
                     {
@@ -140,26 +122,25 @@ namespace WpfApp1
                 }
                 else
                 {
+                    if (tts.synth.State == System.Speech.Synthesis.SynthesizerState.Speaking)
                     try
                     {
-
-                        ((TextToSpeech)Application.Current.Properties["tts"]).synth.Resume();
-                        frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.LightGreen);
+                        tts.synth.Pause();
+                        frontPage.pauseIndicator.Fill = new SolidColorBrush(Colors.Red);
                     }
                     catch (Exception ex)
                     {
                         Debug.WriteLine(ex.ToString());
                     }
                 }
+
+
             }
             if (e.KeyPressed == (Key)settings_manager.settings.skipKey)
             {
                 try
                 {
-                    // requires resume before disposal or will not speak on new object
-                    ResumeSpeech();
-                    ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
-                    ((TextToSpeech)Application.Current.Properties["tts"]).synth = new System.Speech.Synthesis.SpeechSynthesizer();
+                    tts.synth.SpeakAsyncCancelAll();
                     frontPage.skipIndicator.Fill = new SolidColorBrush(Colors.Red);
 
                 }
@@ -177,11 +158,8 @@ namespace WpfApp1
                 //
                 try
                 {
-                    // requires resume before disposal or will not speak on new object
-                    ResumeSpeech();
-                    ((TextToSpeech)Application.Current.Properties["tts"]).messageBuffer.Clear();
-                    ((TextToSpeech)Application.Current.Properties["tts"]).synth.Dispose();
-                    ((TextToSpeech)Application.Current.Properties["tts"]).synth = new System.Speech.Synthesis.SpeechSynthesizer();
+                    tts.messageBuffer.Clear();
+                    tts.synth.SpeakAsyncCancelAll();
                     frontPage.skipAllIndicator.Fill = new SolidColorBrush(Colors.Red);
                 }
                 catch (Exception ex)

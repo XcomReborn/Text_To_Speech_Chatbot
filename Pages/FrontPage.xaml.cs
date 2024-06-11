@@ -80,7 +80,7 @@ namespace WpfApp1.Pages
         private void SetVolume(double value)
         {
             string volumeString = value.ToString();
-            Debug.WriteLine(String.Format("Slider value : {0}", volumeString));
+            //Debug.WriteLine(String.Format("Slider value : {0}", volumeString));
             try
             {
                 settingsManager.settings.volume = Convert.ToInt32(value);
@@ -157,7 +157,6 @@ namespace WpfApp1.Pages
             try
             {
                 // Set volume slider initial value exception will be thrown here
-                
                 volumeSlider.Value = Convert.ToDouble(settingsManager.settings.volume);
             }catch (Exception ex) { Debug.WriteLine(ex.ToString()); };
         }

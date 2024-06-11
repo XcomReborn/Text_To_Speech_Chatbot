@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using TwitchLib.Client;
 using TwitchLib.Client.Enums;
@@ -58,8 +59,6 @@ namespace TTSBot
             client.OnLog += Client_OnLog;
             client.OnJoinedChannel += Client_OnJoinedChannel;
             client.OnMessageReceived += Client_OnMessageReceived;
-            //client.OnWhisperReceived += Client_OnWhisperReceived;
-            //client.OnNewSubscriber += Client_OnNewSubscriber;
             client.OnConnected += Client_OnConnected;
 
             return client.Connect();
@@ -92,6 +91,11 @@ namespace TTSBot
         {
 
             ChatData chat_message = new ChatData(e);
+
+            Debug.WriteLine("Twitch Client_OnMessageReceived");
+
+            //text_to_speech.ProcessChatMessage(chat_message);
+
             text_to_speech.messageBuffer.Enqueue(chat_message);
 
         }
