@@ -1,9 +1,13 @@
-# CSharpTwitchTTSBotGUI
+# Text to speech chatbot
 
- A twitch bot to provide text to speech on Windows configurable using a GUI created using WPF.
+ A chatbot bot to provide text to speech on Windows configurable with a graphical user interface created using WPF.
 
- ![Example11](https://github.com/XcomReborn/Text_To_Speech_Chatbot/assets/4015491/abbee14d-f462-4276-9752-8671d15de811)
+ Version v1.1
 
+![Example12](https://github.com/XcomReborn/Text_To_Speech_Chatbot/assets/4015491/70d427ef-dfdb-42b1-9f03-036d562abe0a)
+
+It may be ugly... but it works.
+ 
 
 ## User Instructions for Windows:
 
@@ -23,6 +27,7 @@ This program uses the KickLib library provide here https://github.com/Bukk94/Kic
 Inorder to connect and send messages to kick.com chat an account with two factor authentication (2FA) is required.
 Please follow the instructions laid out on the KickLib page to get hold of your authentication code which is needed
 along with a valid user name and password.
+
 
 ## Bot Commands. - All commands can be set by the user and enabled/disabled in the commands menu.
 
@@ -97,5 +102,6 @@ search for and install KickLib 0.1.8
 <OutputType> WinExe
 <TargetFramework> net8.0-windows
 <UseWPF> true
+
 
 
