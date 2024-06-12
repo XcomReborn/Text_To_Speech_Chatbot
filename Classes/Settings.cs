@@ -20,9 +20,9 @@ public class Settings
         public string botName = "COHopponentBot"; // the bots chat userName
         [JsonPropertyAttribute] private string botOAuthKey = Encrypt(oAuthKey, passphrase); // stored in file as simple encrypted string.
         public string defaultJoinChannel = "xereborn"; // typically the broadcasters twitch channel
-        public string botAdminUserName = "xereborn"; // incase you want to use the bot on someone elses channel only you will hear the tts.
+        public string twitchAdminUserName = "xereborn"; // incase you want to use the bot on someone elses channel only you will hear the tts.
         public string kickChannelUserName = "Xcom-Reborn";    
-        public string kickChannelAdminUserName = "Xcom-Reborn";
+        public string kickChannelAdminUserName = "Xcom_Reborn";
         [JsonPropertyAttribute] private string kickPassword = "";// stored in file as simple encrypted string.
         [JsonPropertyAttribute] private string kick2FAToken = "";// stored in file as simple encrypted string.
 

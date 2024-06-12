@@ -99,7 +99,7 @@ namespace WpfApp1.Pages
             botTwitchUserNameTextBox.Text = this.settingsManager.settings.botName;
             botTwitchOAuthKey.Password = this.settingsManager.settings.BotOAuthKey;
             channelNameTextBox.Text = this.settingsManager.settings.defaultJoinChannel;
-            adminUserNameTextBox.Text = this.settingsManager.settings.botAdminUserName;
+            adminUserNameTextBox.Text = this.settingsManager.settings.twitchAdminUserName;
             kickUserNameTextBox.Text = this.settingsManager.settings.kickChannelUserName;
             kick_password.Password = this.settingsManager.settings.KickPassword;
             kick2FATextBox.Password = this.settingsManager.settings.Kick2FAToken;
@@ -141,7 +141,7 @@ namespace WpfApp1.Pages
                 if(!String.IsNullOrEmpty(botTwitchOAuthKey.Password))
             settingsManager.settings.BotOAuthKey = botTwitchOAuthKey.Password.Trim();
             settingsManager.settings.defaultJoinChannel = channelNameTextBox.Text.Trim();
-            settingsManager.settings.botAdminUserName = adminUserNameTextBox.Text.Trim();
+            settingsManager.settings.twitchAdminUserName = adminUserNameTextBox.Text.Trim();
             settingsManager.settings.kickChannelAdminUserName = kickAdminUserNameTextBox.Text.Trim();
             if (!String.IsNullOrEmpty(kick_password.Password))
                 settingsManager.settings.KickPassword = kick_password.Password.Trim();

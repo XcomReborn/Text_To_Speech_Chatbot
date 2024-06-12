@@ -6,14 +6,14 @@ using System.Collections.Generic;
 using System;
 
 namespace TTSBot;
-public class ChatUsers
+public class ChatUserManager
 {
 
     public List<ChatUser> users { get; set; } = new List<ChatUser>();
 
     public string dataPath = Directory.GetCurrentDirectory() + "\\data\\twitchUserData.json";
 
-    public ChatUsers()
+    public ChatUserManager()
     {
 
         // attempt to load settings if fails use defaults and create file

@@ -92,22 +92,26 @@ namespace WpfApp1.Pages
                 // Privileges
                 MyComboBox comboBox = new MyComboBox();
 
+                TextBlock myTextBlock5 = new TextBlock();
+                myTextBlock5.Foreground = Brushes.Blue;
+                myTextBlock5.Text = "Admin Only";
+                comboBox.Items.Add(myTextBlock5);
+                TextBlock myTextBlock4 = new TextBlock();
+                myTextBlock4.Foreground = Brushes.Blue;
+                myTextBlock4.Text = "Streamer + Admin";
+                comboBox.Items.Add(myTextBlock4);
+                TextBlock myTextBlock3 = new TextBlock();
+                myTextBlock3.Foreground = Brushes.Blue;
+                myTextBlock3.Text = "Mod + Streamer + Admin";
+                comboBox.Items.Add(myTextBlock3);
+                TextBlock myTextBlock2 = new TextBlock();
+                myTextBlock2.Foreground = Brushes.Blue;
+                myTextBlock2.Text = "VIP + Mod + Streamer + Admin";
+                comboBox.Items.Add(myTextBlock2);
                 TextBlock myTextBlock = new TextBlock();
                 myTextBlock.Foreground = Brushes.Blue;
                 myTextBlock.Text = "Everyone";
                 comboBox.Items.Add(myTextBlock);
-                TextBlock myTextBlock2 = new TextBlock();
-                myTextBlock2.Foreground = Brushes.Blue;
-                myTextBlock2.Text = "VIP + Admin";
-                comboBox.Items.Add(myTextBlock2);
-                TextBlock myTextBlock3 = new TextBlock();
-                myTextBlock3.Foreground = Brushes.Blue;
-                myTextBlock3.Text = "Mod + Admin";
-                comboBox.Items.Add(myTextBlock3);
-                TextBlock myTextBlock4 = new TextBlock();
-                myTextBlock4.Foreground = Brushes.Blue;
-                myTextBlock4.Text = "Admin Only";
-                comboBox.Items.Add(myTextBlock4);
 
                 Grid privilegeGrid = new Grid();
                 Grid.SetRow(privilegeGrid, i);
@@ -115,7 +119,7 @@ namespace WpfApp1.Pages
                 privilegeGrid.Children.Add(comboBox);
 
                 comboBox.name = item.Value.name;
-                comboBox.SelectedIndex = (int)item.Value.privilageLevel;
+                comboBox.SelectedIndex = 4 - (int)item.Value.privilageLevel;
                 comboBox.SelectionChanged += new SelectionChangedEventHandler(PrivilegeLevelChanged);
 
                 // CheckBoxes
@@ -146,7 +150,7 @@ namespace WpfApp1.Pages
                 {
                     if (((MyComboBox)sender).name == item.Value.name)
                     {
-                        item.Value.privilageLevel = (Commands.UserLevel)((MyComboBox)sender).SelectedIndex;
+                        item.Value.privilageLevel = 4 - (Commands.UserLevel)((MyComboBox)sender).SelectedIndex;
                         commands.Save();
                         ((TextToSpeech)Application.Current.Properties["tts"]).commands.Load();
 

@@ -23,7 +23,7 @@ public class CommandsManager{
                     // Default Dictionary
             commands = new Dictionary<Delegate, Commands>
         {
-            { tts.CloseTTS, new Commands("!closetts",Commands.UserLevel.STREAMER, "!closetts", true , "{0}","Closes the TTS twitch_bot.") },
+            { tts.CloseTTS, new Commands("!closetts",Commands.UserLevel.ADMIN, "!closetts", true , "{0}","Closes the TTS twitch_bot.") },
             { tts.SetIgnoreWord, new Commands("!ignoreword",Commands.UserLevel.STREAMER, "!ignoreword", true , "{0} [word]","Adds word to be ignored, will not speak the entire user message.") },
             { tts.SetUnignoreWord, new Commands("!unignoreword",Commands.UserLevel.STREAMER, "!unignoreword", true , "{0} [word]" ,"Removes word if it has previously been added to the ignore word list.") },
             { tts.SetAlias, new Commands("!alias",Commands.UserLevel.MOD, "!alias", true , "{0} #","Gives the chat user name an alternative alias in text to speech.") },
@@ -31,8 +31,8 @@ public class CommandsManager{
             { tts.DisplayBlackList, new Commands("!ignorelist",Commands.UserLevel.MOD, "!ignorelist", true , "{0}","Displays the userNames currently being ignored in chat.") }, 
             { tts.SetIgnore, new Commands("!ignore",Commands.UserLevel.MOD, "!ignore", true , "{0} [userName]","Mutes the specified user.") }, 
             { tts.SetUnignore, new Commands("!unignore",Commands.UserLevel.MOD, "!unignore", true , "{0} [userName]","Unmutes the specified user.") },  
-            { tts.DisplayAvailableVoices, new Commands("!voices",Commands.UserLevel.MOD, "!voices", true , "{0}","Displays the available voices and the number indicies.") },  
-            { tts.SetVoice, new Commands("!voice",Commands.UserLevel.MOD, "!voice", true , "{0} #","Chooses an available voice using the number index.") },
+            { tts.DisplayAvailableVoices, new Commands("!voices",Commands.UserLevel.USER, "!voices", true , "{0}","Displays the available voices and the number indicies.") },  
+            { tts.SetVoice, new Commands("!voice",Commands.UserLevel.USER, "!voice", true , "{0} #","Chooses an available voice using the number index.") },
             { tts.SetUserVoice, new Commands("!uservoice",Commands.UserLevel.MOD, "!uservoice", true , "{0} [userName] #","Chooses an available voice for a specified user using the number index.") }, 
             { tts.SetSubstituteWord, new Commands("!substitute",Commands.UserLevel.STREAMER, "!substitute", true , "{0} [word] [substitute words]","Substitutes a word for another word or phrase.") },    
             { tts.RemoveSubstitute, new Commands("!removesubstitute",Commands.UserLevel.STREAMER, "!removesubstitute", true , "{0} [word]","Removes a word that was previously being substituted.") },

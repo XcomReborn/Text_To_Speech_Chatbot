@@ -10,11 +10,11 @@ namespace TTSBot;
 public class Commands
 {
 
-    public enum UserLevel { USER, VIP, MOD, STREAMER };
+    public enum UserLevel { USER, VIP, MOD, STREAMER, ADMIN };
 
     public readonly string name;
 
-    public UserLevel privilageLevel = UserLevel.STREAMER;
+    public UserLevel privilageLevel = UserLevel.USER;
 
     public string ttsComparisonCommand = "";
 
@@ -24,7 +24,7 @@ public class Commands
 
     public string description = "";
 
-    public Commands(string name = "", UserLevel privilageLevel = UserLevel.STREAMER, string ttsComparisonCommand = "", bool enabled = true, string usage = "", string description = "")
+    public Commands(string name = "", UserLevel privilageLevel = UserLevel.USER, string ttsComparisonCommand = "", bool enabled = true, string usage = "", string description = "")
     {
 
         this.name = name;

@@ -81,7 +81,7 @@ namespace TTSBot
             {
                 if (botSettingManager.settings.settingDictionary["displayConnectionMessage"])
                 {
-                    client.SendMessage(e.Channel, String.Format("{0}'s TTSBot Has Connected to This Channel!", (char.ToUpper(botSettingManager.settings.botAdminUserName[0]) + botSettingManager.settings.botAdminUserName.Substring(1))));
+                    client.SendMessage(e.Channel, String.Format("{0}'s TTSBot Has Connected to This Channel!", (char.ToUpper(botSettingManager.settings.twitchAdminUserName[0]) + botSettingManager.settings.twitchAdminUserName.Substring(1))));
                 }
             }
             catch { }

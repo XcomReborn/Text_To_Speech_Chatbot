@@ -14,7 +14,7 @@
         <Grid x:Name="MainGrid">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="7*" />
+            <RowDefinition Height="14*" />
             <RowDefinition Height="83*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -27,11 +27,11 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="Command" HorizontalAlignment="Left" Foreground="Red" Margin="10,0,10,0" FontFamily="Arial Black" FontSize="20" FontStyle="Normal"/>
-        <TextBlock Grid.Row="0" Grid.Column="2" Text="Usage" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="20" ></TextBlock>
-            <TextBlock Grid.Row="0" Grid.Column="3" Text="Description" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="20" ></TextBlock>
-            <TextBlock Grid.Row="0" Grid.Column="4" Text="Privilege" HorizontalAlignment="Center" FontSize="20" FontFamily="Arial Black" />
-         <TextBlock Grid.Row="0" Grid.Column="5" Text="Enabled" HorizontalAlignment="Center" FontSize="20" FontFamily="Arial Black" />
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="Command" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Red" Margin="10,0,10,0" FontFamily="Arial Black" FontSize="20" FontStyle="Normal"/>
+        <TextBlock Grid.Row="0" Grid.Column="2" Text="Usage" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="20" ></TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="Description" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="20" ></TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontFamily="Arial Black" ><Run Text="Minimum"/><LineBreak/><Run Text="Privilege"/></TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="5" Text="Enabled" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontFamily="Arial Black" />
 
             <Grid x:Name="commandColumn" Grid.Row="1" Grid.Column="1" Height="auto"/>
             <Grid x:Name="usageColumn" Grid.Row="1" Grid.Column="2" Height="auto"/>

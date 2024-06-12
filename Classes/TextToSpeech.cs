@@ -30,7 +30,7 @@ namespace TTSBot {
 
         public KickBot? kick_bot;
 
-        private ChatUsers users = new ChatUsers();
+        private ChatUserManager users = new ChatUserManager();
 
         private IgnoredWords ignoredWords = new IgnoredWords();
 
@@ -147,29 +147,31 @@ namespace TTSBot {
                 {
                     try
                     {
-                        if (this.botSettingManager.settings.settingDictionary["userSpeaks"] ||
-                            this.botSettingManager.settings.settingDictionary["modSpeaks"] && chatData.user_level == Commands.UserLevel.MOD ||
-                            this.botSettingManager.settings.settingDictionary["vipSpeaks"] && chatData.user_level == Commands.UserLevel.VIP ||
-                            this.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] && chatData.user_level == Commands.UserLevel.STREAMER ||
-                            this.botSettingManager.settings.settingDictionary["subscriberSpeaks"] && chatData.is_subscriber)
-                        {
 
-                            if (!this.botSettingManager.settings.settingDictionary["vipSpeaks"] && chatData.user_level == Commands.UserLevel.VIP)
-                            {
-                                return;
-                            }
-                            if (!this.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] && chatData.user_level == Commands.UserLevel.STREAMER)
-                            {
-                                return;
-                            }
-                            if (!this.botSettingManager.settings.settingDictionary["modSpeaks"] && chatData.user_level == Commands.UserLevel.MOD)
-                            {
-                                return;
-                            }
-                            if (!this.botSettingManager.settings.settingDictionary["subscriberSpeaks"] && chatData.is_subscriber)
-                            {
-                                return;
-                            }
+                        if (!this.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] && (chatData.user_level >= Commands.UserLevel.STREAMER))
+                        {
+                            return;
+                        }
+
+                        if (!this.botSettingManager.settings.settingDictionary["modSpeaks"] && (chatData.user_level == Commands.UserLevel.MOD))
+                        {
+                            return;
+                        }
+
+                        if (!this.botSettingManager.settings.settingDictionary["vipSpeaks"] && (chatData.user_level == Commands.UserLevel.VIP))
+                        {
+                            return;
+                        }
+
+                        if (!this.botSettingManager.settings.settingDictionary["vipSpeaks"] && (chatData.user_level == Commands.UserLevel.USER))
+                        {
+                            return;
+                        }
+
+                        if (!this.botSettingManager.settings.settingDictionary["subscriberSpeaks"] && chatData.is_subscriber)
+                        {
+                            return;
+                        }
 
 
 
@@ -239,7 +241,7 @@ namespace TTSBot {
 
                         }
                         // Don't speak message
-                    }
+
                     catch
                     {
 
@@ -331,10 +333,10 @@ namespace TTSBot {
 
 
 
-        public void CheckForChatCommands(ChatData chat_message)
+        public void CheckForChatCommands(ChatData chatData)
         {
 
-            string[] words = chat_message.message.Split(' ');
+            string[] words = chatData.message.Split(' ');
 
 
             if (words.Length > 0)
@@ -345,40 +347,61 @@ namespace TTSBot {
                 foreach(var item in commands.commands){
                     if (item.Value.enabled == true){
                         commmandDict.Add(item.Key, item.Value);
+                        
                     }
                 }
 
 
-                // Admin + Broadcaster Commands
-                if ((this.botSettingManager.settings.botAdminUserName.ToLower() == chat_message.user_name.ToLower()))
+                // Admin Only Commands
+                if (chatData.user_level >= Commands.UserLevel.ADMIN)
                 {
-                    foreach (var item in commmandDict){
-                        if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.STREAMER)){
-                            item.Key.DynamicInvoke(chat_message);
+                    foreach (var item in commmandDict)
+                    {
+                        if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.ADMIN))
+                        {
+                            
+                            item.Key.DynamicInvoke(chatData);
+                            return;
                         }
 
                     }
                 }
 
-                // Admin + Moderator commands 
-                if ((chat_message.user_level == Commands.UserLevel.MOD) || (this.botSettingManager.settings.botAdminUserName.ToLower() == chat_message.user_name.ToLower()))
+                // Admin + Broadcaster Commands
+                if (chatData.user_level >= Commands.UserLevel.STREAMER)
+                {
+                    foreach (var item in commmandDict){
+                        if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.STREAMER)){
+                            item.Key.DynamicInvoke(chatData);
+                            return;
+                        }
+
+                    }
+                }
+
+                // Admin + Broadcaster + Moderator commands 
+                if (chatData.user_level >= Commands.UserLevel.MOD)
+
                 {
                     foreach (var item in commmandDict){
                     if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.MOD)){
-                        item.Key.DynamicInvoke(chat_message);
+                        item.Key.DynamicInvoke(chatData);
+                        return;
                     }
 
                 }                   
                 }
 
-                // Admin + VIP commands 
-                if ((chat_message.user_level == Commands.UserLevel.VIP) || (this.botSettingManager.settings.botAdminUserName.ToLower() == chat_message.user_name.ToLower()))
+                // Admin + Boardcaster + Mod + VIP commands 
+                if (chatData.user_level >= Commands.UserLevel.VIP)
+
                 {
                     foreach (var item in commmandDict)
                     {
                         if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.VIP))
                         {
-                            item.Key.DynamicInvoke(chat_message);
+                            item.Key.DynamicInvoke(chatData);
+                            return;
                         }
 
                     }
@@ -390,7 +413,8 @@ namespace TTSBot {
                 {
                     if ((item.Value.ttsComparisonCommand == words[0]) && (item.Value.privilageLevel == Commands.UserLevel.USER))
                     {
-                        item.Key.DynamicInvoke(chat_message);
+                        item.Key.DynamicInvoke(chatData);
+                        return;
                     }
 
                 }

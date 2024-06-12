@@ -20,7 +20,7 @@ public class ChatData
     public bool is_subscriber { get; set; }
     public Commands.UserLevel user_level { get; set; }
 
-    public ChatData(OnMessageReceivedArgs e)
+    public ChatData(OnMessageReceivedArgs e, SettingsManager settingsManager = null)
     {
         // twitch data process to generic chat message type
         this.user_name = e.ChatMessage.Username;
@@ -45,9 +45,19 @@ public class ChatData
             this.user_level = Commands.UserLevel.STREAMER;
         }
 
+        if (settingsManager != null)
+        {
+
+            if (e.ChatMessage.Username.ToLower() == settingsManager.settings.twitchAdminUserName)
+            {
+                this.user_level = Commands.UserLevel.ADMIN;
+            }
+
+        }
+
     }
 
-    public ChatData(ChatMessageEventArgs e)
+    public ChatData(ChatMessageEventArgs e, SettingsManager settingsManager = null)
     {
 
         // kick data process to generic chat message type
@@ -61,22 +71,35 @@ public class ChatData
         this.user_level = Commands.UserLevel.USER;
         ICollection<Badge> badges = e.Data.Sender.Identity.Badges;
         foreach (Badge badge in badges) { 
-        
+
+        if (badge.Type.ToLower() == "vip")
+            {
+                if (this.user_level < Commands.UserLevel.VIP)
+                {
+                    this.user_level = Commands.UserLevel.VIP;
+                }
+            }
+        if (badge.Type.ToLower() == "moderator")
+            {
+                if (this.user_level < Commands.UserLevel.MOD)
+                {
+                    this.user_level = Commands.UserLevel.MOD;
+                }
+            }
+
         if (badge.Type.ToLower() == "broadcaster")
             {
                 this.user_level = Commands.UserLevel.STREAMER;
             }
-        if (badge.Type.ToLower() == "moderator")
-            {
-                this.user_level = Commands.UserLevel.MOD;
-            }
-        if (badge.Type.ToLower() == "vip")
-            {
-                this.user_level = Commands.UserLevel.VIP;
-            }
 
         }
-
+        if (settingsManager != null)
+        {
+            if (user_name.ToLower() == settingsManager.settings.kickChannelAdminUserName.ToLower())
+            {
+                this.user_level = Commands.UserLevel.ADMIN;
+            }
+        }
 
     }
 
