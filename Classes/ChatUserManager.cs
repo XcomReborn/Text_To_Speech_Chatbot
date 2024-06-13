@@ -26,20 +26,6 @@ public class ChatUserManager
         
     }
 
-    public bool AddUser(string username, string alias)
-    {
-
-        try
-        {
-            users.Add(new ChatUser(username.ToLower(), alias));
-        }
-        catch
-        {
-            return false;
-        }
-        return true;
-    }
-
     public bool AddUser(ChatUser user)
     {
         try
@@ -62,38 +48,20 @@ public class ChatUserManager
     ChatUser GetUser(ChatUser user)
     {
 
-        return users.Find(x => x.name.ToLower() == user.name.ToLower());
-
-    }
-
-    ChatUser GetUser(string userName){
-
-        return users.Find(x => x.name.ToLower() == userName.ToLower());
+        return users.Find(x => (x.name.ToLower() == user.name.ToLower()) && (x.origin == user.origin));
 
     }
 
     public bool IsUserInList(ChatUser user)
     {
 
-        if (users.Find(x => x.name.ToLower() == user.name.ToLower()) != null)
+        if (users.Find(x => (x.name.ToLower() == user.name.ToLower()) && (x.origin == user.origin)) != null)
         {
             return true;
         }
         return false;
     }
-
-      public bool IsUserInList(string userName)
-    {
-
-        if (users.Find(x => x.name.ToLower() == userName.ToLower()) != null)
-        {
-            return true;
-        }
-        return false;
-    }
-
-      
-
+ 
 
     public bool Load()
     {

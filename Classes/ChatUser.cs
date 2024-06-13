@@ -30,7 +30,7 @@ public class ChatUser{
 
     public override string ToString()
     {
-        return String.Format("userName {0}, alias {1}, voiceNumber {2}, voiceName {3}, voiceRate {4}, ignored {5}",name, alias, voiceNumber.ToString(),voiceName, voiceRate.ToString(), ignored.ToString());
+        return String.Format("userName {0}, alias {1}, voiceNumber {2}, voiceName {3}, voiceRate {4}, ignored {5}, origin {6}",name, alias, voiceNumber.ToString(),voiceName, voiceRate.ToString(), ignored.ToString(), origin);
     }
 
 

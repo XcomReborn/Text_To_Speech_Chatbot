@@ -602,7 +602,7 @@ namespace TTSBot {
                 ReadOnlyCollection <InstalledVoice> installedVoices  = synth.GetInstalledVoices();
                 if ( 0 <= voiceNumber && voiceNumber <= (installedVoices.Count - 1)){
 
-                    ChatUser user = new ChatUser(chatData.user_name);
+                    ChatUser user = new ChatUser(chatData.user_name, origin:chatData.origin);
                     if (users.IsUserInList(user)){
 
                         user = users.GetUser(user);
@@ -657,7 +657,7 @@ namespace TTSBot {
                 ReadOnlyCollection <InstalledVoice> installedVoices  = synth.GetInstalledVoices();
                 if ( 0 <= voiceNumber && voiceNumber <= (installedVoices.Count - 1)){
 
-                    ChatUser user = new ChatUser(userName);
+                    ChatUser user = new ChatUser(userName, origin:chatData.origin);
                     if (users.IsUserInList(user)){
 
                         user = users.GetUser(user);
@@ -823,7 +823,7 @@ namespace TTSBot {
             {
 
                 string alias = Sanitize(String.Join(" ", wordList.Skip(1)));
-                ChatUser user = new ChatUser(chatData.user_name, alias);
+                ChatUser user = new ChatUser(chatData.user_name, alias, origin:chatData.origin);
                 if (user != null)
                 {
 
@@ -867,7 +867,7 @@ namespace TTSBot {
             {
                 string userName = wordList[1];
                 string alias = Sanitize(String.Join(" ", wordList.Skip(2)));
-                ChatUser user = new ChatUser(userName, alias);
+                ChatUser user = new ChatUser(userName, alias, origin:chatData.origin);
                 if (user != null)
                 {
 
@@ -908,7 +908,7 @@ namespace TTSBot {
             string[] wordList = chatData.message.Split(' ');
             if (wordList.Length > 1)
             {
-                ChatUser user = new ChatUser(wordList[1]);
+                ChatUser user = new ChatUser(wordList[1], origin:chatData.origin);
                 if (user != null)
                 {
 
@@ -947,7 +947,7 @@ namespace TTSBot {
             if (wordList.Length > 1)
             {
 
-                ChatUser user = new ChatUser(wordList[1]);
+                ChatUser user = new ChatUser(wordList[1], origin:chatData.origin);
                 if (user != null)
                 {
 
