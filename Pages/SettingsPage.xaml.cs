@@ -41,6 +41,8 @@ namespace WpfApp1.Pages
 
             checkboxList = new List<MyCheckBox>();
 
+            adminCheckbox.name = "adminSpeaks";
+            checkboxList.Add(adminCheckbox);
             streamerCheckbox.name = "broadcasterSpeaks";
             checkboxList.Add(streamerCheckbox);
             moderatorCheckbox.name = "modSpeaks";

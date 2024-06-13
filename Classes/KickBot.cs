@@ -73,7 +73,7 @@ namespace TTSBot
         private void Client_OnMessageReceived(object sender, ChatMessageEventArgs e)
         {
 
-            ChatData chat_data = new ChatData(e, this.botSettingManager);
+            ChatData chat_data = new ChatData(e, settingsManager:this.botSettingManager);
 
             Debug.WriteLine("Client_OnMessageReceived");
 

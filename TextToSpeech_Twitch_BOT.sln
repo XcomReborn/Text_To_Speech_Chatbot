@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextToSpeech_Twitch_BOT", "TextToSpeech_Twitch_BOT.csproj", "{CEDF6D15-1002-46ED-8C40-602740E37CA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextToSpeech_Chat_BOT", "TextToSpeech_Chat_BOT.csproj", "{CEDF6D15-1002-46ED-8C40-602740E37CA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

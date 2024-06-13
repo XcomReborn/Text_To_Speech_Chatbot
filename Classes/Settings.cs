@@ -31,6 +31,7 @@ public class Settings
 
         public Dictionary<string, bool> settingDictionary = new Dictionary<string, bool>
     {
+        {"adminSpeaks", true },
         {"broadcasterSpeaks" , true },
         {"modSpeaks" , true },
         {"vipSpeaks" , true },

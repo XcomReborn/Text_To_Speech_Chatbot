@@ -59,7 +59,6 @@ public class ChatData
 
     public ChatData(ChatMessageEventArgs e, SettingsManager settingsManager = null)
     {
-
         // kick data process to generic chat message type
         this.user_name = e.Data.Sender.Username;
         this.channel = e.Data.ChatroomId.ToString();
@@ -71,6 +70,12 @@ public class ChatData
         this.user_level = Commands.UserLevel.USER;
         ICollection<Badge> badges = e.Data.Sender.Identity.Badges;
         foreach (Badge badge in badges) { 
+
+        if (badge.Type.ToLower() == "subscriber")
+            {
+                this.is_subscriber = true;
+            }
+
 
         if (badge.Type.ToLower() == "vip")
             {

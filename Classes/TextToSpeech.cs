@@ -131,6 +131,8 @@ namespace TTSBot {
 
             string user_name = chatData.user_name;
 
+            Debug.WriteLine("LEVEL {}", chatData.user_level.ToString());
+
             //check for alias
             ChatUser user = new ChatUser(user_name, origin:chatData.origin);
             if (users.IsUserInList(user))
@@ -148,31 +150,13 @@ namespace TTSBot {
                     try
                     {
 
-                        if (!this.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] && (chatData.user_level >= Commands.UserLevel.STREAMER))
-                        {
-                            return;
-                        }
-
-                        if (!this.botSettingManager.settings.settingDictionary["modSpeaks"] && (chatData.user_level == Commands.UserLevel.MOD))
-                        {
-                            return;
-                        }
-
-                        if (!this.botSettingManager.settings.settingDictionary["vipSpeaks"] && (chatData.user_level == Commands.UserLevel.VIP))
-                        {
-                            return;
-                        }
-
-                        if (!this.botSettingManager.settings.settingDictionary["vipSpeaks"] && (chatData.user_level == Commands.UserLevel.USER))
-                        {
-                            return;
-                        }
-
-                        if (!this.botSettingManager.settings.settingDictionary["subscriberSpeaks"] && chatData.is_subscriber)
-                        {
-                            return;
-                        }
-
+                            if (!this.botSettingManager.settings.settingDictionary["adminSpeaks"] && (chatData.user_level == Commands.UserLevel.ADMIN) ||
+                                !this.botSettingManager.settings.settingDictionary["broadcasterSpeaks"] && (chatData.user_level == Commands.UserLevel.STREAMER) ||
+                                !this.botSettingManager.settings.settingDictionary["modSpeaks"] && (chatData.user_level == Commands.UserLevel.MOD) ||
+                                !this.botSettingManager.settings.settingDictionary["vipSpeaks"] && (chatData.user_level == Commands.UserLevel.VIP) ||
+                                !this.botSettingManager.settings.settingDictionary["userSpeaks"] && (chatData.user_level == Commands.UserLevel.USER) ||
+                                !this.botSettingManager.settings.settingDictionary["subscriberSpeaks"] && chatData.is_subscriber)
+                            { return; }
 
 
                             //only use username said something, if not saying for first time in a row.

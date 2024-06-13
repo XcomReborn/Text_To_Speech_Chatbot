@@ -90,7 +90,7 @@ namespace TTSBot
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
 
-            ChatData chat_message = new ChatData(e);
+            ChatData chat_message = new ChatData(e, settingsManager:botSettingManager);
 
             Debug.WriteLine("Twitch Client_OnMessageReceived");
 
