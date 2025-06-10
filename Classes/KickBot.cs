@@ -1,4 +1,4 @@
-using KickLib.Interfaces;
+//using KickLib.Interfaces;
 using KickLib;
 using System;
 using KickLib.Client.Interfaces;
@@ -11,7 +11,11 @@ using KickLib.Models;
 using System.Net.Mail;
 using WpfApp1.Pages;
 using System.Diagnostics;
-using KickLib.Models.Response.v1.Channels;
+//using KickLib.Models.Response.v1.Channels;
+using KickLib.Api.Unofficial.Interfaces;
+using KickLib.Api.Unofficial;
+using KickLib.Api.Unofficial.Models.Response.v1.Channels;
+using KickLib.Api.Unofficial.Models;
 
 
 
@@ -21,7 +25,7 @@ namespace TTSBot
     public class KickBot{
 
 
-        public IKickApi kickApi = new KickApi();
+        public IUnofficialKickApi kickApi = new KickUnofficialApi();
         private SettingsManager? botSettingManager;
         public string userName = "xereborn";
         public Queue<ChatData> messageBuffer = new Queue<ChatData>();

@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="KickLib" Version="0.1.8" />
+    <PackageReference Include="KickLib" Version="1.4.1" />
     <PackageReference Include="System.Speech" Version="6.0.0" />
     <PackageReference Include="TwitchLib" Version="3.3.0" />
   </ItemGroup>

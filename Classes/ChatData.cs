@@ -71,20 +71,21 @@ public class ChatData
         ICollection<Badge> badges = e.Data.Sender.Identity.Badges;
         foreach (Badge badge in badges) { 
 
-        if (badge.Type.ToLower() == "subscriber")
+ 
+        if (badge.Type == BadgeType.Subscriber)
             {
                 this.is_subscriber = true;
             }
 
 
-        if (badge.Type.ToLower() == "vip")
+        if (badge.Type == BadgeType.Vip)
             {
                 if (this.user_level < Commands.UserLevel.VIP)
                 {
                     this.user_level = Commands.UserLevel.VIP;
                 }
             }
-        if (badge.Type.ToLower() == "moderator")
+        if (badge.Type == BadgeType.Moderator)
             {
                 if (this.user_level < Commands.UserLevel.MOD)
                 {
@@ -92,7 +93,7 @@ public class ChatData
                 }
             }
 
-        if (badge.Type.ToLower() == "broadcaster")
+        if (badge.Type == BadgeType.Broadcaster)
             {
                 this.user_level = Commands.UserLevel.STREAMER;
             }
