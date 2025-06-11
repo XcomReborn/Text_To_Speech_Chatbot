@@ -16,6 +16,7 @@ using KickLib.Api.Unofficial.Interfaces;
 using KickLib.Api.Unofficial;
 using KickLib.Api.Unofficial.Models.Response.v1.Channels;
 using KickLib.Api.Unofficial.Models;
+using System.Printing.IndexedProperties;
 
 
 
@@ -41,7 +42,19 @@ namespace TTSBot
 
         public async Task Connect()
         {
-            channelInfo = await this.kickApi.Channels.GetChannelInfoAsync(this.botSettingManager.settings.kickChannelUserName);
+
+
+            Debug.Print(this.botSettingManager.settings.kickChannelUserName);
+
+            try
+            {
+                channelInfo = await this.kickApi.Channels.GetChannelInfoAsync(this.botSettingManager.settings.kickChannelUserName);
+            }
+            catch
+            {
+                Debug.Print("Exception Thrown");
+                return;
+            }
 
             client.OnMessage += Client_OnMessageReceived;
             client.OnConnected += Client_OnConnected;
