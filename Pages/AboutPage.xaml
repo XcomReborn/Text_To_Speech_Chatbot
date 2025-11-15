@@ -27,7 +27,7 @@
 
         <StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="350">
             <TextBlock 
-            Text="This Application was created by XcomReborn (2022) and is freely available  to anyone who wants to use it. The program is intended to provide text to speech directly from any twitch or kick chat channel and the text is processed locally by the Windows internal text to speech engine." 
+            Text="This Application was created by XcomReborn (2022) and is freely available  to anyone who wants to use it. The program is intended to provide text to speech directly from any twitch chat channel and the text is processed locally by the Windows internal text to speech engine." 
                    TextWrapping="Wrap" 
                    Foreground="Red"
                    />
@@ -55,7 +55,7 @@
             TextWrapping="Wrap"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            ><Run Text="Version v1.5"/><LineBreak/><Run Text="JUN - 2024"/></TextBlock>
+            ><Run Text="Version v1."/><Run Language="en-gb" Text="6"/><LineBreak/><Run Text="JUN - 2024"/></TextBlock>
 
 
     </Grid>

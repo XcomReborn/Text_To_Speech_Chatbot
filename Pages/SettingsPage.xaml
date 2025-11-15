@@ -70,6 +70,10 @@
             </StackPanel>
 
             <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="2" RenderTransformOrigin="0,0">
+            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Left" TextWrapping="Wrap" Text="User Information:" FontSize="12" VerticalAlignment="Top" Foreground="black" IsEnabled="False" RenderTransformOrigin="0,0" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Grid.ColumnSpan="2" RenderTransformOrigin="0,0">
                 <TextBox x:Name="adminUserNameTextBox" 
                          HorizontalAlignment="Left" 
                          TextWrapping="NoWrap" 
@@ -85,7 +89,7 @@
             </StackPanel>
 
 
-            <StackPanel Grid.Row="3" Orientation="Horizontal" Grid.ColumnSpan="2" RenderTransformOrigin="0,0">
+            <StackPanel Grid.Row="4" Orientation="Horizontal" Grid.ColumnSpan="2" RenderTransformOrigin="0,0">
                 <TextBox x:Name="channelNameTextBox" 
                          HorizontalAlignment="Left" 
                          TextWrapping="NoWrap" 
@@ -103,8 +107,10 @@
             </StackPanel>
 
 
-
+            <!--
             <StackPanel Grid.Row="4" Orientation="Horizontal" Grid.ColumnSpan="2" RenderTransformOrigin="0,0">
+                
+
                 <TextBox x:Name="kickUserNameTextBox" 
                          HorizontalAlignment="Left" 
                          TextWrapping="NoWrap" 
@@ -163,6 +169,8 @@
                            Foreground="Red" 
                            Text="Kick Admin User Name" RenderTransformOrigin="0,0"/>
             </StackPanel>
+            
+            -->
 
             <Grid Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="2" Margin="0,6,0,0" RenderTransformOrigin="0,0">
                 <Grid.ColumnDefinitions>

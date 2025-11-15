@@ -45,11 +45,11 @@ namespace WpfApp1.Pages
 
             if (!((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.client.IsConnected)
             {
-                connectButtonKick.Content = "Connect";
+                //connectButtonKick.Content = "Connect";
             }
             else
             {
-                connectButtonKick.Content = "Disconnect";
+                //connectButtonKick.Content = "Disconnect";
             }
 
 
@@ -141,16 +141,16 @@ namespace WpfApp1.Pages
 
         }
 
-        private async void OnClickConnectButtonKick(object sender, RoutedEventArgs e)
-        {
-            bool connected = ((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.client.IsConnected;
-            if (!connected)
-            {
-                ((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.Connect();
-                connectButtonKick.IsEnabled = false;
-            }
+        //private async void OnClickConnectButtonKick(object sender, RoutedEventArgs e)
+        //{
+        //    bool connected = ((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.client.IsConnected;
+        //    if (!connected)
+        //    {
+        //        ((TextToSpeech)Application.Current.Properties["tts"]).kick_bot.Connect();
+        //        connectButtonKick.IsEnabled = false;
+        //    }
 
-        }
+        //}
 
         private void volumeSliderLoaded(object sender, RoutedEventArgs e)
         {

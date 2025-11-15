@@ -102,10 +102,10 @@ namespace WpfApp1.Pages
             botTwitchOAuthKey.Password = this.settingsManager.settings.BotOAuthKey;
             channelNameTextBox.Text = this.settingsManager.settings.defaultJoinChannel;
             adminUserNameTextBox.Text = this.settingsManager.settings.twitchAdminUserName;
-            kickUserNameTextBox.Text = this.settingsManager.settings.kickChannelUserName;
-            kick_password.Password = this.settingsManager.settings.KickPassword;
-            kick2FATextBox.Password = this.settingsManager.settings.Kick2FAToken;
-            kickAdminUserNameTextBox.Text = this.settingsManager.settings.kickChannelAdminUserName;
+            //kickUserNameTextBox.Text = this.settingsManager.settings.kickChannelUserName;
+            //kick_password.Password = this.settingsManager.settings.KickPassword;
+            //kick2FATextBox.Password = this.settingsManager.settings.Kick2FAToken;
+            //kickAdminUserNameTextBox.Text = this.settingsManager.settings.kickChannelAdminUserName;
 
             saidStringTextBox.Text = this.settingsManager.settings.saidString;
 
@@ -144,12 +144,12 @@ namespace WpfApp1.Pages
             settingsManager.settings.BotOAuthKey = botTwitchOAuthKey.Password.Trim();
             settingsManager.settings.defaultJoinChannel = channelNameTextBox.Text.Trim();
             settingsManager.settings.twitchAdminUserName = adminUserNameTextBox.Text.Trim();
-            settingsManager.settings.kickChannelAdminUserName = kickAdminUserNameTextBox.Text.Trim();
-            if (!String.IsNullOrEmpty(kick_password.Password))
-                settingsManager.settings.KickPassword = kick_password.Password.Trim();
-            if (!String.IsNullOrEmpty(kick2FATextBox.Password))
-                settingsManager.settings.Kick2FAToken = kick2FATextBox.Password.Trim();
-            settingsManager.settings.kickChannelUserName = kickUserNameTextBox.Text.Trim();
+            //settingsManager.settings.kickChannelAdminUserName = kickAdminUserNameTextBox.Text.Trim();
+            //if (!String.IsNullOrEmpty(kick_password.Password))
+            //    settingsManager.settings.KickPassword = kick_password.Password.Trim();
+            //if (!String.IsNullOrEmpty(kick2FATextBox.Password))
+            //    settingsManager.settings.Kick2FAToken = kick2FATextBox.Password.Trim();
+            //settingsManager.settings.kickChannelUserName = kickUserNameTextBox.Text.Trim();
             settingsManager.Save();
 
         }

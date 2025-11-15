@@ -46,7 +46,7 @@
                 </Button.Resources>
             </Button>
 
-
+<!--
             <TextBlock
                 Text="Kick Chat"
                 HorizontalAlignment="Center"
@@ -63,7 +63,9 @@
                     </Style>
                 </Button.Resources>
             </Button>
-
+-->
+            
+            
         </StackPanel>
 
         <Grid Grid.Row="1" Grid.Column="3">
