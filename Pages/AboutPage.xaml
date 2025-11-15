@@ -55,7 +55,7 @@
             TextWrapping="Wrap"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            ><Run Text="Version v1."/><Run Language="en-gb" Text="6"/><LineBreak/><Run Text="JUN - 2024"/></TextBlock>
+            ><Run Text="Version v1."/><Run Text="6"/><LineBreak/><Run Language="en-gb" Text="NOV"/><Run Text=" - 202"/><Run Language="en-gb" Text="5"/></TextBlock>
 
 
     </Grid>
